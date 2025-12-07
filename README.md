@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 Installation information
 =======
@@ -23,3 +24,7 @@ Additional Resources:
 ==========
 Community Documentation: https://docs.neoforged.net/  
 NeoForged Discord: https://discord.neoforged.net/
+=======
+# warcoloniesextension
+Extensão de Minecraft para Minecolonies e outros mods para construção de reino.
+>>>>>>> 4e2582ecefd4155b4b772fcdd6668dac008da54a
