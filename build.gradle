@@ -1,28 +1,35 @@
 plugins {
-    id 'net.neoforged.gradle.userdev' version '7.0.57'
+    id 'net.neoforged.moddev' version '2.0.121'
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 version = project.mod_version
 
-minecraft {
-    version project.minecraft_version
+neoForge {
+    version = project.neo_version
+    
     runs {
-        client {}
-        server {}
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
+    
+    mods {
+        "${project.mod_id}" {
+            sourceSet(sourceSets.main)
+        }
     }
 }
 
 repositories {
     maven { url = 'https://maven.neoforged.net/releases' }
     mavenCentral()
-}
-
-dependencies {
-    implementation "net.neoforged:neoforge:${project.neoforge_version}"
 }

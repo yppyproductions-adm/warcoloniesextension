@@ -26,54 +26,10 @@
     {
       "type": "java",
       "request": "launch",
-      "name": "Data",
-      "presentation": {
-        "group": "Mod Development - warcoloniesextension",
-        "order": 1
-      },
-      "projectName": "warcoloniesextension",
-      "mainClass": "net.neoforged.devlaunch.Main",
-      "args": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/dataRunProgramArgs.txt"
-      ],
-      "vmArgs": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
-      ],
-      "cwd": "${workspaceFolder}/run",
-      "env": {},
-      "console": "internalConsole",
-      "shortenCommandLine": "none"
-    },
-    {
-      "type": "java",
-      "request": "launch",
-      "name": "GameTestServer",
-      "presentation": {
-        "group": "Mod Development - warcoloniesextension",
-        "order": 2
-      },
-      "projectName": "warcoloniesextension",
-      "mainClass": "net.neoforged.devlaunch.Main",
-      "args": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/gameTestServerRunProgramArgs.txt"
-      ],
-      "vmArgs": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/gameTestServerRunVmArgs.txt",
-        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
-      ],
-      "cwd": "${workspaceFolder}/run",
-      "env": {},
-      "console": "internalConsole",
-      "shortenCommandLine": "none"
-    },
-    {
-      "type": "java",
-      "request": "launch",
       "name": "Server",
       "presentation": {
         "group": "Mod Development - warcoloniesextension",
-        "order": 3
+        "order": 1
       },
       "projectName": "warcoloniesextension",
       "mainClass": "net.neoforged.devlaunch.Main",
