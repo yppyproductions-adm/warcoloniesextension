@@ -1,0 +1,13 @@
+{
+  "itemGroup.warcoloniesextension": "Example Mod Tab",
+  "block.warcoloniesextension.example_block": "Example Block",
+  "item.warcoloniesextension.example_item": "Example Item",
+
+  "warcoloniesextension.configuration.title": "War Colonies Extension Configs",
+  "warcoloniesextension.configuration.section.warcoloniesextension.common.toml": "War Colonies Extension Configs",
+  "warcoloniesextension.configuration.section.warcoloniesextension.common.toml.title": "War Colonies Extension Configs",
+  "warcoloniesextension.configuration.items": "Item List",
+  "warcoloniesextension.configuration.logDirtBlock": "Log Dirt Block",
+  "warcoloniesextension.configuration.magicNumberIntroduction": "Magic Number Text",
+  "warcoloniesextension.configuration.magicNumber": "Magic Number"
+}
