@@ -6,17 +6,17 @@
       "request": "launch",
       "name": "Client",
       "presentation": {
-        "group": "Mod Development - warcoloniesextension-template-1.21.1",
+        "group": "Mod Development - warcoloniesextension",
         "order": 0
       },
-      "projectName": "warcoloniesextension-template-1.21.1",
+      "projectName": "warcoloniesextension",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/build/moddev/clientRunProgramArgs.txt"
+        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/build/moddev/clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/bin/main"
+        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "env": {},
@@ -28,17 +28,17 @@
       "request": "launch",
       "name": "Data",
       "presentation": {
-        "group": "Mod Development - warcoloniesextension-template-1.21.1",
+        "group": "Mod Development - warcoloniesextension",
         "order": 1
       },
-      "projectName": "warcoloniesextension-template-1.21.1",
+      "projectName": "warcoloniesextension",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/build/moddev/dataRunProgramArgs.txt"
+        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/dataRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/build/moddev/dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/bin/main"
+        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "env": {},
@@ -50,17 +50,17 @@
       "request": "launch",
       "name": "GameTestServer",
       "presentation": {
-        "group": "Mod Development - warcoloniesextension-template-1.21.1",
+        "group": "Mod Development - warcoloniesextension",
         "order": 2
       },
-      "projectName": "warcoloniesextension-template-1.21.1",
+      "projectName": "warcoloniesextension",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/build/moddev/gameTestServerRunProgramArgs.txt"
+        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/gameTestServerRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/build/moddev/gameTestServerRunVmArgs.txt",
-        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/bin/main"
+        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "env": {},
@@ -72,17 +72,17 @@
       "request": "launch",
       "name": "Server",
       "presentation": {
-        "group": "Mod Development - warcoloniesextension-template-1.21.1",
+        "group": "Mod Development - warcoloniesextension",
         "order": 3
       },
-      "projectName": "warcoloniesextension-template-1.21.1",
+      "projectName": "warcoloniesextension",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/build/moddev/serverRunProgramArgs.txt"
+        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/build/moddev/serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension-template-1.21.1/bin/main"
+        "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "env": {},
