@@ -3,14 +3,31 @@ loaderVersion="[2,)"
 license="All Rights Reserved"
 
 [[mods]]
-modId = "warcolonies"
-version = "0.1.0"
-displayName = "War Colonies"
-updateJSONURL = ""
+modId="warcoloniesextension"
+version="1.0.0"
+displayName="War Colonies Extension"
+authors="Alessandra"
+description='''
+Extensão estratégica de guerra para colônias em Minecraft.
+'''
 
-[[dependencies.warcolonies]]
-    modId="minecolonies"
-    mandatory=true
-    versionRange="*"
-    ordering="NONE"
-    side="BOTH"
+[[dependencies.warcoloniesextension]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.216,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.warcoloniesextension]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.22)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.warcoloniesextension]]
+modId="minecolonies"
+type="optional"
+versionRange="*"
+ordering="NONE"
+side="BOTH"
