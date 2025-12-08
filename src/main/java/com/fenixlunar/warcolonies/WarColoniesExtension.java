@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
+import br.com.warcolonies.core.WarColoniesMod;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -89,15 +90,23 @@ public class WarColoniesExtension {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
+        // Inicializa managers centrais
+        WarColoniesMod.init();
 
+        // Registra o tick handler estratégico
+        NeoForge.EVENT_BUS.register(new br.com.warcolonies.core.StrategicTickHandler(
+                WarColoniesMod.getEconomyManager(),
+                WarColoniesMod.getLogisticsManager(),
+                WarColoniesMod.getBuildingManager(),
+                WarColoniesMod.getConquestManager()
+        ));
+
+        // Logging básico de exemplo (mantido)
+        LOGGER.info("HELLO FROM COMMON SETUP");
         if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
             LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
         }
-
         LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
-
         Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
     }
 
