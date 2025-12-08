@@ -1,0 +1,549 @@
+.
+├── build
+│   ├── classes
+│   │   └── java
+│   │       ├── main
+│   │       │   ├── br
+│   │       │   │   └── com
+│   │       │   │       └── warcolonies
+│   │       │   │           ├── building
+│   │       │   │           │   ├── BuildingSimulationManager.class
+│   │       │   │           │   └── VirtualBuildingTask.class
+│   │       │   │           ├── colony
+│   │       │   │           │   ├── DiplomacyManager.class
+│   │       │   │           │   ├── DiplomacyStatus.class
+│   │       │   │           │   ├── WarColony.class
+│   │       │   │           │   ├── WarColonyManager.class
+│   │       │   │           │   └── WarPlayerProfile.class
+│   │       │   │           ├── command
+│   │       │   │           │   └── WarDebugCommand.class
+│   │       │   │           ├── core
+│   │       │   │           │   ├── StrategicTickHandler.class
+│   │       │   │           │   └── WarColoniesMod.class
+│   │       │   │           ├── data
+│   │       │   │           │   ├── WarEconomyManager.class
+│   │       │   │           │   └── WarWorldData.class
+│   │       │   │           ├── logistics
+│   │       │   │           │   ├── EscortInfo.class
+│   │       │   │           │   ├── LogisticsManager.class
+│   │       │   │           │   ├── Shipment.class
+│   │       │   │           │   └── ShipmentState.class
+│   │       │   │           ├── territory
+│   │       │   │           │   ├── ClaimStatus.class
+│   │       │   │           │   ├── ConquestClaim.class
+│   │       │   │           │   ├── ConquestManager.class
+│   │       │   │           │   └── TerritoryManager.class
+│   │       │   │           └── warfare
+│   │       │   │               ├── EnemyVillage.class
+│   │       │   │               └── WarfareManager.class
+│   │       │   └── com
+│   │       │       └── fenixlunar
+│   │       │           └── warcolonies
+│   │       │               ├── Config.class
+│   │       │               ├── WarColoniesExtension.class
+│   │       │               └── WarColoniesExtensionClient.class
+│   │       └── test
+│   ├── generated
+│   │   └── sources
+│   │       ├── annotationProcessor
+│   │       │   └── java
+│   │       │       └── main
+│   │       └── headers
+│   │           └── java
+│   │               └── main
+│   ├── libs
+│   │   └── warcoloniesextension-1.0.0.jar
+│   ├── moddev
+│   │   └── artifacts
+│   │       ├── neoforge-21.1.216-client-extra-aka-minecraft-resources.jar
+│   │       ├── neoforge-21.1.216.jar
+│   │       ├── neoforge-21.1.216-merged.jar
+│   │       └── neoforge-21.1.216-sources.jar
+│   ├── resources
+│   │   ├── main
+│   │   │   ├── assets
+│   │   │   │   └── warcoloniesextension
+│   │   │   │       └── lang
+│   │   │   │           └── en_us.json
+│   │   │   └── META-INF
+│   │   │       ├── accesstransformer.cfg
+│   │   │       └── neoforge.mods.toml
+│   │   └── test
+│   └── tmp
+│       ├── compileJava
+│       │   └── previous-compilation-data.bin
+│       ├── createMinecraftArtifacts
+│       │   ├── nfrt_artifact_manifest.properties
+│       │   └── nfrt-problem-report.json
+│       ├── jar
+│       │   └── MANIFEST.MF
+│       └── neoformruntime
+│           ├── 20251207-205111_downloadClient
+│           ├── 20251207-205111_downloadClientMappings
+│           ├── 20251207-205111_downloadJson
+│           └── 20251207-205111_downloadServer
+├── build.gradle
+├── filetree.txt
+├── .git
+│   ├── branches
+│   ├── COMMIT_EDITMSG
+│   ├── config
+│   ├── cursor
+│   │   └── crepe
+│   │       └── 806107d7e5b3f4f32df770bcb6f13048a75c0c08
+│   │           ├── index.bin
+│   │           ├── metadata.json
+│   │           └── postings.bin
+│   ├── description
+│   ├── FETCH_HEAD
+│   ├── HEAD
+│   ├── hooks
+│   │   ├── applypatch-msg.sample
+│   │   ├── commit-msg.sample
+│   │   ├── fsmonitor-watchman.sample
+│   │   ├── post-update.sample
+│   │   ├── pre-applypatch.sample
+│   │   ├── pre-commit.sample
+│   │   ├── pre-merge-commit.sample
+│   │   ├── prepare-commit-msg.sample
+│   │   ├── pre-push.sample
+│   │   ├── pre-rebase.sample
+│   │   ├── pre-receive.sample
+│   │   ├── push-to-checkout.sample
+│   │   ├── sendemail-validate.sample
+│   │   └── update.sample
+│   ├── index
+│   ├── info
+│   │   └── exclude
+│   ├── logs
+│   │   ├── HEAD
+│   │   └── refs
+│   │       ├── heads
+│   │       │   └── main
+│   │       └── remotes
+│   │           └── origin
+│   │               └── main
+│   ├── objects
+│   │   ├── 00
+│   │   │   └── 5179ac7fc7400123f31a57e6336cd019eb227f
+│   │   ├── 01
+│   │   │   └── 6241428962641437d29dae878f061550154f19
+│   │   ├── 02
+│   │   │   ├── 71f8b34bab55d4bbce0ec6949fa919c2a5d9fa
+│   │   │   └── 858652bba248a0447587712eda182067123886
+│   │   ├── 03
+│   │   │   └── db3b4d1d5e8f5060f2265185844b47e0a91aec
+│   │   ├── 05
+│   │   │   ├── 5ecbb0f457c327e86663b3c37cf7906adc3c84
+│   │   │   └── e0fa0a9ea38eff53ecbfd8c4140c5bed3f3137
+│   │   ├── 08
+│   │   │   └── 489b63899df478730dba3260516317967f2ce1
+│   │   ├── 10
+│   │   │   └── 2d77966b9c7c58b8a9fb59831a014d6a3d3b38
+│   │   ├── 11
+│   │   │   └── 61cb1a667f10d31db08539c39b06c2c32c3498
+│   │   ├── 12
+│   │   │   └── efbcbc8804614814429a3360ba2d42e3ef1f8b
+│   │   ├── 15
+│   │   │   └── 1d4f5b286000d3fdbc6c4f4b94903dd60514ee
+│   │   ├── 19
+│   │   │   ├── 04a89c8a4ae508300c516dc6f2d4cf0548d432
+│   │   │   └── ab6d0e994d6c982176a5b72a6ded68179e77a1
+│   │   ├── 1b
+│   │   │   ├── 33c55baabb587c669f562ae36f953de2481846
+│   │   │   └── c034287d07a49e030e7431d48209abab9acb1b
+│   │   ├── 1c
+│   │   │   ├── 6d17b4536d0895646014672907ec5c1803c906
+│   │   │   ├── 81ea791abd85637f6186fa3e9a090fa3d21968
+│   │   │   └── 9cf5f1a5f430d5bce2cf406694b7738f6bef7b
+│   │   ├── 1f
+│   │   │   ├── 38c8b9e03c687df54cbd4b865325f0d5256f84
+│   │   │   └── 7e060b83b54b025ea76ba82c2f18403fee0863
+│   │   ├── 20
+│   │   │   └── 85ffd51c5a30727f5acc3347f5c29f4c016ac2
+│   │   ├── 21
+│   │   │   ├── 12371e74ffc71b9fe64721e281b30942783a8c
+│   │   │   └── 6f00c62ce810b19052b0284e69d2f02bb5aa78
+│   │   ├── 23
+│   │   │   ├── 00cea00d970f7f9a1656469c8c027bb75d5ca7
+│   │   │   └── d15a9367071145e9c79bb4ddf879d1fbe78b5d
+│   │   ├── 25
+│   │   │   └── 2a37c3ff3a5b079148e3096bd8ba4640596c55
+│   │   ├── 28
+│   │   │   ├── 8f1296db3743ae83d541327840d21bc250d1b3
+│   │   │   └── d3c9c55ce613453b39888d490cf600b4f2a00d
+│   │   ├── 2a
+│   │   │   └── cc15b64ac5a0abaa9c4e5fcdbe4342177fcbe2
+│   │   ├── 2d
+│   │   │   └── 5c3df7bbd4130a0c34c0fc148d2402ac29ad13
+│   │   ├── 2e
+│   │   │   ├── 38232ee9381e647db5b4e9f5b36d8b7352927b
+│   │   │   ├── 4b8e9c9dbe1c05e0997ab1d3d20fae3b5182e8
+│   │   │   └── b61c3e171cdaa44d656ff4118b020ae2ca1feb
+│   │   ├── 30
+│   │   │   └── 0c3bbb9f95a151dc64cbce6a65b16f647fb3d7
+│   │   ├── 31
+│   │   │   └── d255050d2a51b11bd6ec0294d09ac93cd5164c
+│   │   ├── 32
+│   │   │   ├── a80f8e004b1e614448d5398c889d267dc00493
+│   │   │   └── d6a3482f97ac2314c2e910804237a3c48cecbc
+│   │   ├── 34
+│   │   │   └── 7d55185e705d4d82250b6bc3d42164bed40388
+│   │   ├── 35
+│   │   │   ├── aad2419b1476c24a8caabcd823a38edc282d8b
+│   │   │   └── fdf760ee7b1bcc274dff722606ad252373d65e
+│   │   ├── 36
+│   │   │   └── d7d32fc69f88766ad8c01384833c7b9f7f5d4a
+│   │   ├── 3f
+│   │   │   └── 0810b3c238108b63f75f48708625f502fdc3be
+│   │   ├── 40
+│   │   │   └── d2b4cf43a30af9ca8c60da0122868faa225425
+│   │   ├── 41
+│   │   │   └── 2820787cfd1710924103afdb32bdfaa815fd9d
+│   │   ├── 44
+│   │   │   └── 51c382f27bd6f13c770ec5e8495d71735e5673
+│   │   ├── 4d
+│   │   │   └── 521e8dc63d21e069bb1e5541f692b402e1f131
+│   │   ├── 4e
+│   │   │   └── 2582ecefd4155b4b772fcdd6668dac008da54a
+│   │   ├── 50
+│   │   │   ├── 17037da28afd92ccce6ab92c9d050a18c9fc83
+│   │   │   └── 68a29ebf621b724f88c0c76bc73f5b0d5e742a
+│   │   ├── 51
+│   │   │   └── d52a16dd1e727994b94b700a9df84e29cd3556
+│   │   ├── 52
+│   │   │   ├── 4f0963bd1d8c6149eb6f2dc52a5fc50c7637ad
+│   │   │   └── 6a7e8aa21c7e3743804055c6e724212198293f
+│   │   ├── 53
+│   │   │   └── 5f19e9de4d09a10dcb9982d7b277373fce4165
+│   │   ├── 54
+│   │   │   └── 77ce30dea5f81e0b47f484ca65d452c68c0e9a
+│   │   ├── 55
+│   │   │   └── ba83754a768865a40960ccfaf8b50a85962b4e
+│   │   ├── 56
+│   │   │   └── 7d665921d26d1a7f976e883f78fb22280a02cf
+│   │   ├── 59
+│   │   │   └── 84569573741219fef8dee75fc73e864682a809
+│   │   ├── 5a
+│   │   │   └── e06e1db8e210ad4d9d394d23c7e8d78744055c
+│   │   ├── 5c
+│   │   │   ├── 095eca9c379cd1687f733a9b776aed1702d37e
+│   │   │   └── 44e2b112dae29361705787cd762a01ff2fe6cb
+│   │   ├── 5d
+│   │   │   └── d56ed193795bf0a0d9d9d6b2326321bb1f72b4
+│   │   ├── 5e
+│   │   │   └── d9e2dee4b220dd90d9bb43d8980459da82770c
+│   │   ├── 5f
+│   │   │   └── 070dffa49edcb7c695c34a4a3963d1c4151d1d
+│   │   ├── 60
+│   │   │   └── 9a1a6b1d3e18882017aebd7f92917a19fef55e
+│   │   ├── 63
+│   │   │   ├── 18fef2386b06218aeca4371ebee59d84062875
+│   │   │   ├── 6e70a1fc89abb3dc890aef6fa320c4415c15fd
+│   │   │   └── 768c8d5eb6f3bbc1d87d1c96a478e48e1facb4
+│   │   ├── 69
+│   │   │   └── 0a0649d8c6a29e30ee2ebe21412f103aa7426d
+│   │   ├── 6c
+│   │   │   └── 57616d2b5d2a081f0f0115efb046c02fc37a07
+│   │   ├── 6d
+│   │   │   └── 4bc2ba89cec22eef7021a78f8cf218d000a5e0
+│   │   ├── 6e
+│   │   │   └── 5cb25a895a16c95c7107d33441e7bc056705e1
+│   │   ├── 70
+│   │   │   ├── 2c150e9cc56017dcedcada88bdc58120698497
+│   │   │   └── 7464d40550a0bb15562a690b952f7116001a02
+│   │   ├── 72
+│   │   │   └── d13e0594f0f5d3b8efab52381e86818e071a66
+│   │   ├── 73
+│   │   │   └── ab9cf0ed579b8b3f1a9ae656edf5560c1c32c7
+│   │   ├── 74
+│   │   │   └── 2e09b6a0ae71b12077ee6a5576b581326d8fd3
+│   │   ├── 75
+│   │   │   └── e667b28a06fdede1b64a0673ad269c186d12e1
+│   │   ├── 76
+│   │   │   └── 3fe1a6fb367064a0df4a22145e61364d625213
+│   │   ├── 79
+│   │   │   └── 9fe187d520be060bb2682d4645f3ff2c8223b1
+│   │   ├── 7a
+│   │   │   ├── 488e36b12df617bde77356b63ed29c65977533
+│   │   │   └── a3b9c3d706f992f2d6cd3e68b9b7e9cbe85167
+│   │   ├── 7b
+│   │   │   └── 016a89fbafd4b802a61d3207cf76f7c2253c6e
+│   │   ├── 7d
+│   │   │   └── b47bcec9dc0b2796cc6716fbcf7e93f08c4d39
+│   │   ├── 7f
+│   │   │   └── d082b6541de852a772275d6f8e8fc89ec49125
+│   │   ├── 80
+│   │   │   ├── 6107d7e5b3f4f32df770bcb6f13048a75c0c08
+│   │   │   └── e41b6cad136a4b50b2b6c384f4ae3ab44ad8a3
+│   │   ├── 81
+│   │   │   ├── a8caec435633574bbfad814ba73765d773eca0
+│   │   │   └── b1a9bf9a52f249e57bb453662d7851378ee347
+│   │   ├── 83
+│   │   │   └── be18b4162d3bda9a3cac31accf70535933ab2b
+│   │   ├── 84
+│   │   │   └── bcaf47e78f31608b58d02aacbe598cfca39409
+│   │   ├── 88
+│   │   │   └── a1b540703af2bd18157876e60b02f05ef672b7
+│   │   ├── 89
+│   │   │   ├── 075e9dfb21dd935b58d8cbf8c37c858ee62dd9
+│   │   │   └── ee9e0efa78bfc9570d55b6be3a3737bc0e22f0
+│   │   ├── 8d
+│   │   │   ├── 5412a96771d242d03c23962bec162b49cdd53f
+│   │   │   └── dca12ec5cb05b11da172e5fd0d6f9195a4777e
+│   │   ├── 8f
+│   │   │   └── 262be0d44bb67f83098c769713bb4495e8c961
+│   │   ├── 93
+│   │   │   └── 938df76755a7431a53199669e09e45212dab68
+│   │   ├── 94
+│   │   │   └── 7cd333eb84110c862b837594805e3d06d915b0
+│   │   ├── 95
+│   │   │   └── 15d250f7beacdc4bc12c07e7145916b7ae720e
+│   │   ├── 97
+│   │   │   └── bfde1bb79651fd4af5365b739c5fd479c90c5f
+│   │   ├── 9b
+│   │   │   └── 8bd13f0f3c482e7219049068b0ad99cd8854c5
+│   │   ├── 9c
+│   │   │   ├── b54c19b54a84ac37f06b64c9b88e7710d3052d
+│   │   │   └── b6ebc30bf64ce37b0bcee81a8a4dfffd6fe252
+│   │   ├── 9e
+│   │   │   └── fa01c1e787f5928abe20f20e85d97cd2d2288f
+│   │   ├── a0
+│   │   │   ├── 3918c170881de5bd37961ed193397969e5da95
+│   │   │   └── c482c850ac333996065c367d7c489c907bb977
+│   │   ├── a5
+│   │   │   └── 118832ec4ab4fd6320da964edaea39973dccfe
+│   │   ├── a7
+│   │   │   └── f1f93d3142b22ff759cbab311f56c71c19a716
+│   │   ├── a8
+│   │   │   ├── 780a466bd8c99e166ec0b86d05ef806fb29ca7
+│   │   │   └── f9eeea2e8e2f15abbaef8d5a1a86d01164e122
+│   │   ├── a9
+│   │   │   └── 38596edfeca819805737af43358c263d54fc43
+│   │   ├── ac
+│   │   │   └── 59148b585c94eca6f75b0f55f59bd92bd24f83
+│   │   ├── ad
+│   │   │   ├── 0b2d0c6e342245e7ce599c36f055c3a925e35a
+│   │   │   └── 918e1bb52471d123a9ed638a519590352f5ec9
+│   │   ├── ae
+│   │   │   ├── 1b29d88d159670369d9100db20cf4bef04e004
+│   │   │   └── 294d57db7a340436e89e0f6645564310cb9a65
+│   │   ├── b0
+│   │   │   └── d4858b7560258e00f0b4eb505eda41ef42380b
+│   │   ├── b1
+│   │   │   └── fc2ad2e018b48a44ed98ff08b73341029e6161
+│   │   ├── b3
+│   │   │   ├── 55f50b02d5b648f606651c241631ace39f4e4b
+│   │   │   └── f0871f8f19a81cb30dfa617b4e9695a9ec6368
+│   │   ├── b4
+│   │   │   └── 21122b684c72704ea0bff715cf9acb1cec4c30
+│   │   ├── b6
+│   │   │   ├── 4bc64b6b06ab0240a17e1becb5a1437caccc69
+│   │   │   └── 91b179274fc1479ec5c34193b4d1245050bb39
+│   │   ├── b9
+│   │   │   ├── 3c3c658a0c41110d3f1e02776925dad979b2db
+│   │   │   └── 8e251baf50a6974eccaa0f293cf861f9de31dc
+│   │   ├── ba
+│   │   │   └── d7c2462f5a1ee988f37afa9b4e7b9cb7ab5949
+│   │   ├── bc
+│   │   │   └── ac6d3238efdc7cc4f5e5a218a497ba79f59031
+│   │   ├── bd
+│   │   │   └── 7e7e35ae91b9844582b4b35509cd095b187a19
+│   │   ├── bf
+│   │   │   └── 13d29ec63cf663f20c1a147006c1518f4493ca
+│   │   ├── c3
+│   │   │   ├── 644696d49841dd9689431f1909590c99396105
+│   │   │   └── a7b5c9a05f0a7c1414eb5057285b3e8606cc91
+│   │   ├── c7
+│   │   │   └── 6eaa0b25d6d551cfcb8c42434248fac222e33a
+│   │   ├── ca
+│   │   │   └── 1456720e1cfbbc36051389f76e1a90825cd93d
+│   │   ├── cc
+│   │   │   └── 42af0e2d577f829b109369e8d187a3a37ef77c
+│   │   ├── d2
+│   │   │   ├── 40f47d13413cc2254ae2758948b53c94eefb77
+│   │   │   └── 9d9fe91b283c32df7e848a31147bc9e426e475
+│   │   ├── d5
+│   │   │   └── 3ecaf3d72994295fae3a43da947cbb595d647e
+│   │   ├── d6
+│   │   │   └── 0cb8681e863201d72a713614fd6baa95402591
+│   │   ├── d8
+│   │   │   └── 1d4f1fe9032b0e35188858ce567753a1851602
+│   │   ├── d9
+│   │   │   └── 5c25e28b88e28d9fd4f16302ccfd1e9f7ee569
+│   │   ├── da
+│   │   │   └── e8ab166cc10394f576410b6b779381746b92e2
+│   │   ├── db
+│   │   │   └── 3a6ac207e507b0bc1635a9f2c18d3b174e682e
+│   │   ├── e0
+│   │   │   ├── 9e0181f1c4c0928eb68c30c2477fb07de59927
+│   │   │   ├── d786af55ea47b6dd8745d48086b21a8d14c177
+│   │   │   └── fd637b3afe1e93495d4b6ab4c17b82ad258a5a
+│   │   ├── e2
+│   │   │   └── d3ffeb1b393747d2c2e7d20289f4ea456994d4
+│   │   ├── e3
+│   │   │   ├── 1750cf599d5d12b2003dc5844386d63fc7cb84
+│   │   │   └── 83628eeaaebc19b8463d80395153b1b9abe73d
+│   │   ├── e6
+│   │   │   └── 8693369b4128165a6edf529556a5ccf07e18b3
+│   │   ├── e9
+│   │   │   ├── b511cc19bfaf1cdc506eb78f069fc9deecd78d
+│   │   │   ├── c0f54db07c1abc76d4dd00a6375ca08aba4625
+│   │   │   └── d3bd267011e4fd73a8f171052f50d6bafe66a7
+│   │   ├── eb
+│   │   │   ├── 0c4863794ad3817e23e995635ca959a9d54219
+│   │   │   └── 38fc77ad4f8f4b535aad7eb2bd2ef66b936690
+│   │   ├── f0
+│   │   │   └── 070496bb26c65849c4dc453ff969ce0df1dcfb
+│   │   ├── f1
+│   │   │   └── b19697fcf89ba57c444a7f424fd62e1c389d93
+│   │   ├── f2
+│   │   │   └── 541a17adb286554d7e619b044fc27aaba5bc30
+│   │   ├── f4
+│   │   │   └── 31e99f125e5401553ed7c6e94138ade1763a2d
+│   │   ├── f5
+│   │   │   └── 1c5eae518da24c7e77a14d3b7502bcf52d98b5
+│   │   ├── f8
+│   │   │   └── 11f6ae6a68f671738a6cbfcd3cc426ac628ad5
+│   │   ├── fa
+│   │   │   └── 71990fedef1b39813228ac5f165505f42c159e
+│   │   ├── fb
+│   │   │   └── b857fb70031105a2d4ec36e526e2b6e6fd5967
+│   │   ├── fe
+│   │   │   └── 457f39634bf74ee2d76067a12d1413e81a1a2a
+│   │   ├── info
+│   │   └── pack
+│   ├── ORIG_HEAD
+│   └── refs
+│       ├── heads
+│       │   └── main
+│       ├── remotes
+│       │   └── origin
+│       │       └── main
+│       └── tags
+├── .gitattributes
+├── .github
+│   └── workflows
+│       └── build.yml
+├── .gitignore
+├── .gradle
+│   ├── 8.8
+│   │   ├── checksums
+│   │   │   ├── checksums.lock
+│   │   │   ├── md5-checksums.bin
+│   │   │   └── sha1-checksums.bin
+│   │   ├── dependencies-accessors
+│   │   │   └── gc.properties
+│   │   ├── executionHistory
+│   │   │   ├── executionHistory.bin
+│   │   │   └── executionHistory.lock
+│   │   ├── expanded
+│   │   │   └── expanded.lock
+│   │   ├── fileChanges
+│   │   │   └── last-build.bin
+│   │   ├── fileHashes
+│   │   │   ├── fileHashes.bin
+│   │   │   ├── fileHashes.lock
+│   │   │   └── resourceHashesCache.bin
+│   │   ├── gc.properties
+│   │   └── vcsMetadata
+│   ├── buildOutputCleanup
+│   │   ├── buildOutputCleanup.lock
+│   │   ├── cache.properties
+│   │   └── outputFiles.bin
+│   ├── caches
+│   │   └── minecraft
+│   │       ├── launcher_metadata.json
+│   │       └── versions
+│   │           └── 1.21.1
+│   │               ├── client.jar
+│   │               ├── client.txt
+│   │               ├── metadata.json
+│   │               ├── server.jar
+│   │               └── server.txt
+│   ├── file-system.probe
+│   ├── repositories
+│   │   └── ng_dummy_ng
+│   │       └── net
+│   │           ├── minecraft
+│   │           │   └── client
+│   │           │       └── 1.21.1
+│   │           │           ├── client-1.21.1-client-extra.jar
+│   │           │           ├── client-1.21.1-sources.jar
+│   │           │           └── ivy-1.21.1-fg2.xml
+│   │           └── neoforged
+│   │               └── neoforge
+│   │                   └── 21.1.176
+│   │                       ├── ivy-21.1.176-fg2.xml
+│   │                       ├── neoforge-21.1.176.jar
+│   │                       └── neoforge-21.1.176-sources.jar
+│   └── vcs-1
+│       └── gc.properties
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── README.md
+├── settings.gradle
+├── src
+│   └── main
+│       ├── java
+│       │   ├── br
+│       │   │   └── com
+│       │   │       └── warcolonies
+│       │   │           ├── building
+│       │   │           │   ├── BuildingSimulationManager.java
+│       │   │           │   └── VirtualBuildingTask.java
+│       │   │           ├── colony
+│       │   │           │   ├── DiplomacyManager.java
+│       │   │           │   ├── DiplomacyStatus.java
+│       │   │           │   ├── WarColony.java
+│       │   │           │   ├── WarColonyManager.java
+│       │   │           │   └── WarPlayerProfile.java
+│       │   │           ├── command
+│       │   │           │   └── WarDebugCommand.java
+│       │   │           ├── core
+│       │   │           │   ├── StrategicTickHandler.java
+│       │   │           │   └── WarColoniesMod.java
+│       │   │           ├── data
+│       │   │           │   ├── WarEconomyManager.java
+│       │   │           │   └── WarWorldData.java
+│       │   │           ├── logistics
+│       │   │           │   ├── EscortInfo.java
+│       │   │           │   ├── LogisticsManager.java
+│       │   │           │   ├── Shipment.java
+│       │   │           │   └── ShipmentState.java
+│       │   │           ├── territory
+│       │   │           │   ├── ClaimStatus.java
+│       │   │           │   ├── ConquestClaim.java
+│       │   │           │   ├── ConquestManager.java
+│       │   │           │   └── TerritoryManager.java
+│       │   │           └── warfare
+│       │   │               ├── EnemyVillage.java
+│       │   │               └── WarfareManager.java
+│       │   └── com
+│       │       └── fenixlunar
+│       │           └── warcolonies
+│       │               ├── Config.java
+│       │               ├── WarColoniesExtensionClient.java
+│       │               └── WarColoniesExtension.java
+│       ├── resources
+│       │   ├── assets
+│       │   │   └── warcoloniesextension
+│       │   │       └── lang
+│       │   │           └── en_us.json
+│       │   └── META-INF
+│       │       ├── accesstransformer.cfg
+│       │       └── neoforge.mods.toml
+│       └── templates
+│           └── META-INF
+│               └── neoforge.mods.toml
+├── TEMPLATE_LICENSE.txt
+└── .vscode
+    ├── launch.json
+    └── settings.json
+
+243 directories, 304 files
