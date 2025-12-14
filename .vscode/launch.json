@@ -4,6 +4,25 @@
     {
       "type": "java",
       "request": "launch",
+      "name": "Launch Client (Gradle)",
+      "projectName": "warcoloniesextension",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@${workspaceFolder}/build/moddev/clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@${workspaceFolder}/build/moddev/clientRunVmArgs.txt",
+        "-Dfml.modFolders=warcoloniesextension%%${workspaceFolder}/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "console": "internalConsole",
+      "shortenCommandLine": "none",
+      "preLaunchTask": "build",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "java",
+      "request": "launch",
       "name": "Client",
       "presentation": {
         "group": "Mod Development - warcoloniesextension",
@@ -16,7 +35,7 @@
       ],
       "vmArgs": [
         "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
+        "-Dfml.modFolders=warcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "env": {},
@@ -38,7 +57,7 @@
       ],
       "vmArgs": [
         "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
+        "-Dfml.modFolders=warcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "env": {},

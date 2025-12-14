@@ -22,8 +22,7 @@ import net.minecraft.world.entity.player.Inventory;
  */
 public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTableMenu>
 {
-        // MVP: estado local para Delivery Priority (cliente apenas). Não sincronizado (PÓS-MVP).
-        private int deliveryPriority = 1;
+        // Delivery Priority é autoritativa no menu (servidor). Cliente apenas lê via DataSlot.
 
     // Você já está carregando texturas desse namespace hoje.
     private static final String NS = "warcolonies";
@@ -222,12 +221,11 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 MINI_W, MINI_H,
                 BTN_MINI, MINI_W, MINI_H,
                 () -> {
-                    // MVP: decrease priority locally
-                    deliveryPriority -= 1; // TODO (PÓS-MVP): clamp/sync to server
-                    if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: Delivery priority set to " + deliveryPriority), false);
+                    // Send decrement request to server (ID 1)
+                    if (minecraft != null && minecraft.gameMode != null) {
+                        minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 1);
                     }
-                }, Component.empty()
+                }, Component.literal("-")
         ));
 
         // deliveryPrioUp pos="144 135" size="14 15"
@@ -236,25 +234,23 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 MINI_W, MINI_H,
                 BTN_MINI, MINI_W, MINI_H,
                 () -> {
-                    // MVP: increase priority locally
-                    deliveryPriority += 1; // TODO (PÓS-MVP): clamp between 0..10 and sync to server
-                    if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: Delivery priority set to " + deliveryPriority), false);
+                    // Send increment request to server (ID 2)
+                    if (minecraft != null && minecraft.gameMode != null) {
+                        minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 2);
                     }
-                }, Component.empty()
+                }, Component.literal("+")
         ));
 
-        // forcePickup pos="30 154" size="129 17"
+        // Operate (MVP) pos="30 154" size="129 17" -> ID 0
         this.addRenderableWidget(new TexturedButton(
                 left + 30, top + 154,
                 MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 BTN_MEDIUM_LARGE, MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 () -> {
-                    // MVP: forcePickup placeholder
-                    if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: Force Pickup (placeholder)"), false);
+                    if (minecraft != null && minecraft.gameMode != null) {
+                        minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 0);
                     }
-                }, Component.empty()
+                }, Component.literal("Operate")
         ));
 
         // =========================
@@ -319,7 +315,7 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         // prioValue pos="30 135" size="95 15"
         // MVP: desenhar o valor local de Delivery Priority. Não há sincronização ainda (PÓS-MVP).
         if (this.font != null) {
-            final Component prioText = Component.literal("Delivery Priority: " + this.deliveryPriority);
+            final Component prioText = Component.literal("Delivery Priority: " + this.menu.getDeliveryPriority());
             g.drawString(this.font, prioText, left + 30, top + 135, 0xFF000000, false);
         }
 

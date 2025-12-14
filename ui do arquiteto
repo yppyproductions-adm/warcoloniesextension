@@ -1,0 +1,19 @@
+UI do arquiteto
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# No ramo main
+# Your branch is up to date with 'origin/main'.
+#
+# Mudanças a serem submetidas:
+#	modified:   src/main/java/com/fenixlunar/warcolonies/client/widgets/TexturedButton.java
+#
+# Changes not staged for commit:
+#	modified:   .vscode/launch.json
+#	modified:   src/main/java/com/fenixlunar/warcolonies/client/ArchitectTableScreen.java
+#	modified:   src/main/java/com/fenixlunar/warcolonies/client/widgets/TexturedButton.java
+#	modified:   src/main/java/com/fenixlunar/warcolonies/menu/ArchitectTableMenu.java
+#
+# Arquivos não monitorados:
+#	.vscode/tasks.json
+#
