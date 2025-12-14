@@ -1,0 +1,209 @@
+package com.fenixlunar.warcolonies.client;
+
+import com.fenixlunar.warcolonies.WarColoniesExtension;
+import com.fenixlunar.warcolonies.menu.ArchitectTableMenu;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+
+public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTableMenu> {
+
+    // Texturas
+    private static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath(
+            WarColoniesExtension.MODID,
+            "textures/gui/architect_table.png"
+    );
+    
+    private static final ResourceLocation BUTTON_ICONS = ResourceLocation.fromNamespaceAndPath(
+            WarColoniesExtension.MODID,
+            "textures/gui/guide/button.png"
+    );
+    
+    private static final ResourceLocation TAB_ICONS = ResourceLocation.fromNamespaceAndPath(
+            WarColoniesExtension.MODID,
+            "textures/gui/modules/inventory.png"
+    );
+    
+    private static final ResourceLocation ICON_START = ResourceLocation.fromNamespaceAndPath(
+            WarColoniesExtension.MODID,
+            "textures/gui/icon_start.png"
+    );
+    
+    private static final ResourceLocation ICON_CHECK = ResourceLocation.fromNamespaceAndPath(
+            WarColoniesExtension.MODID,
+            "textures/gui/icon_check.png"
+    );
+    
+    private static final ResourceLocation ICON_CANCEL = ResourceLocation.fromNamespaceAndPath(
+            WarColoniesExtension.MODID,
+            "textures/gui/icon_cancel.png"
+    );
+
+    // Estado
+    private String status = "Pronto para operar";
+    private boolean isOperating = false;
+    private int progress = 0;
+    
+    // Botões
+    private Button operateButton;
+    private ImageButton inventoryTab;
+    private ImageButton settingsTab;
+    private ImageButton infoTab;
+    
+    public ArchitectTableScreen(ArchitectTableMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
+        this.imageWidth = 256;
+        this.imageHeight = 256;
+        this.inventoryLabelY = -1000; // Esconde o label padrão do inventário
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        
+        int x = this.leftPos;
+        int y = this.topPos;
+        
+        // Botão principal Operar/Atualizar
+        operateButton = Button.builder(Component.literal("Operar / Atualizar"), button -> {
+            if (!isOperating) {
+                startOperation();
+            } else {
+                stopOperation();
+            }
+        })
+        .bounds(x + 70, y + 180, 120, 20)
+        .build();
+        this.addRenderableWidget(operateButton);
+        
+        // Tabs laterais (visuais apenas, sem funcionalidade completa ainda)
+        inventoryTab = new ImageButton(
+            x + 10, y + 100, 32, 32, 
+            0, 0, 32, TAB_ICONS, 32, 32,
+            button -> setStatus("Aba: Inventário"),
+            Component.literal("Inventário")
+        );
+        this.addRenderableWidget(inventoryTab);
+        
+        settingsTab = new ImageButton(
+            x + 10, y + 140, 32, 32,
+            0, 0, 32, TAB_ICONS, 32, 32,
+            button -> setStatus("Aba: Configurações"),
+            Component.literal("Configurações")
+        );
+        this.addRenderableWidget(settingsTab);
+        
+        infoTab = new ImageButton(
+            x + 10, y + 180, 32, 32,
+            0, 0, 32, TAB_ICONS, 32, 32,
+            button -> setStatus("Arquiteto - Nível 1"),
+            Component.literal("Informações")
+        );
+        this.addRenderableWidget(infoTab);
+    }
+
+    private void startOperation() {
+        isOperating = true;
+        progress = 0;
+        setStatus("Operando...");
+        operateButton.setMessage(Component.literal("Parar Operação"));
+        
+        // Em uma implementação real, aqui enviaríamos um pacote para o servidor
+        WarColoniesExtension.LOGGER.info("✅ Iniciando operação do Arquiteto");
+    }
+    
+    private void stopOperation() {
+        isOperating = false;
+        setStatus("Operação interrompida");
+        operateButton.setMessage(Component.literal("Operar / Atualizar"));
+        WarColoniesExtension.LOGGER.info("⏹️ Parando operação do Arquiteto");
+    }
+    
+    private void setStatus(String newStatus) {
+        status = newStatus;
+    }
+
+    @Override
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        // Fundo principal
+        guiGraphics.blit(BG, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        
+        // Barra de progresso (se estiver operando)
+        if (isOperating) {
+            int progressWidth = (int)(100 * (progress / 100.0));
+            guiGraphics.fill(
+                this.leftPos + 70, this.topPos + 160,
+                this.leftPos + 70 + progressWidth, this.topPos + 165,
+                0xFF00AA00
+            );
+        }
+        
+        // Ícones decorativos
+        guiGraphics.blit(ICON_START, this.leftPos + 50, this.topPos + 50, 0, 0, 16, 16, 16, 16);
+        guiGraphics.blit(ICON_CHECK, this.leftPos + 190, this.topPos + 50, 0, 0, 16, 16, 16, 16);
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        
+        // Textos informativos
+        guiGraphics.drawString(
+            this.font, 
+            Component.literal("Arquiteto - Nível 1"), 
+            this.leftPos + 80, 
+            this.topPos + 30, 
+            0x404040, 
+            false
+        );
+        
+        guiGraphics.drawString(
+            this.font,
+            Component.literal("Status: " + status),
+            this.leftPos + 70,
+            this.topPos + 140,
+            0x404040,
+            false
+        );
+        
+        guiGraphics.drawString(
+            this.font,
+            Component.literal("Função: Crafter de construção"),
+            this.leftPos + 70,
+            this.topPos + 110,
+            0x404040,
+            false
+        );
+        
+        // Itens que pode produzir
+        guiGraphics.drawString(
+            this.font,
+            Component.literal("Itens: Tocha, Tábua, Escada, Laje, Porta, Cerca, Vidro"),
+            this.leftPos + 70,
+            this.topPos + 200,
+            0x404040,
+            false
+        );
+        
+        // Simulação de progresso (apenas visual)
+        if (isOperating && progress < 100) {
+            progress += 1;
+            if (progress >= 100) {
+                setStatus("Operação concluída!");
+                isOperating = false;
+                operateButton.setMessage(Component.literal("Operar / Atualizar"));
+            }
+        }
+    }
+
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        // Título já desenhado no render()
+    }
+}

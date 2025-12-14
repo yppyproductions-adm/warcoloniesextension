@@ -1,66 +1,46 @@
 package br.com.warcolonies.building;
 
-import java.util.Map;
-import br.com.warcolonies.colony.WarColony;
-
+/**
+ * Representa uma obra simulada em "modo virtual".
+ * Ela não mexe em blocos de verdade ainda, é só para debug do sistema.
+ */
 public class VirtualBuildingTask {
-    private WarColony colony;
-    private String building;
-    private int totalBlocks;
-    private int remainingBlocks;
-    private float virtualSpeed;
-    private Map<String, Integer> requiredResources;
-    private Map<String, Integer> deliveredResources;
 
-    public VirtualBuildingTask(WarColony colony, String building, int totalBlocks, float virtualSpeed, Map<String, Integer> requiredResources) {
-        this.colony = colony;
-        this.building = building;
-        this.totalBlocks = totalBlocks;
-        this.remainingBlocks = totalBlocks;
-        this.virtualSpeed = virtualSpeed;
-        this.requiredResources = requiredResources;
-        this.deliveredResources = new java.util.HashMap<>();
+    private final String description;
+    private final int totalTicksNeeded;
+    private int ticksRemaining;
+
+    public VirtualBuildingTask(String description, int totalTicksNeeded) {
+        this.description = description;
+        this.totalTicksNeeded = totalTicksNeeded;
+        this.ticksRemaining = totalTicksNeeded;
     }
 
-    // Getters
-    public WarColony getColony() {
-        return colony;
+    public String getDescription() {
+        return description;
     }
 
-    public String getBuilding() {
-        return building;
+    public int getTotalTicksNeeded() {
+        return totalTicksNeeded;
     }
 
-    public int getTotalBlocks() {
-        return totalBlocks;
+    public int getTicksRemaining() {
+        return ticksRemaining;
     }
 
-    public int getRemainingBlocks() {
-        return remainingBlocks;
+    /**
+     * Avança 1 "tick estratégico" na tarefa.
+     */
+    public void tick() {
+        if (ticksRemaining > 0) {
+            ticksRemaining--;
+        }
     }
 
-    public float getVirtualSpeed() {
-        return virtualSpeed;
-    }
-
-    public Map<String, Integer> getRequiredResources() {
-        return requiredResources;
-    }
-
-    public Map<String, Integer> getDeliveredResources() {
-        return deliveredResources;
-    }
-
-    // Setters
-    public void setRemainingBlocks(int remainingBlocks) {
-        this.remainingBlocks = remainingBlocks;
-    }
-
-    public void addDeliveredResource(String resource, int amount) {
-        deliveredResources.put(resource, deliveredResources.getOrDefault(resource, 0) + amount);
-    }
-
+    /**
+     * A tarefa é considerada completa quando ticksRemaining chega a 0.
+     */
     public boolean isComplete() {
-        return remainingBlocks <= 0;
+        return ticksRemaining <= 0;
     }
 }

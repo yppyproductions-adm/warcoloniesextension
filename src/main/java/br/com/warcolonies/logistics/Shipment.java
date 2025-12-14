@@ -2,26 +2,28 @@ package br.com.warcolonies.logistics;
 
 import java.util.List;
 
+/**
+ * Representa uma caravana abstrata (sem NPC) para o MVP.
+ */
 public class Shipment {
-    private Object origin;
-    private Object destination;
-    private List<Object> cargo;
-    private EscortInfo escort;
+
+    private final Object origin;
+    private final Object destination;
+    private final List<Object> cargo;
+    private final EscortInfo escort;
+
     private ShipmentState state;
-    private long departure;
-    private long arrival;
-    private float routePosition;
+    private int progress; // 0–100
 
     public Shipment(Object origin, Object destination, List<Object> cargo, EscortInfo escort) {
         this.origin = origin;
         this.destination = destination;
         this.cargo = cargo;
         this.escort = escort;
-        this.state = ShipmentState.PENDING;
-        this.routePosition = 0.0f;
+        this.state = ShipmentState.IN_TRANSIT;
+        this.progress = 0;
     }
 
-    // Getters
     public Object getOrigin() {
         return origin;
     }
@@ -42,32 +44,31 @@ public class Shipment {
         return state;
     }
 
-    public long getDeparture() {
-        return departure;
+    public int getProgress() {
+        return progress;
     }
 
-    public long getArrival() {
-        return arrival;
+    /**
+     * Avança o progresso em "amount" (ex.: 5% por tick).
+     * Quando chegar em 100, marca como ARRIVED.
+     */
+    public void advanceProgress(int amount) {
+        if (state != ShipmentState.IN_TRANSIT) {
+            return;
+        }
+
+        progress += amount;
+        if (progress >= 100) {
+            progress = 100;
+            arrive();
+        }
     }
 
-    public float getRoutePosition() {
-        return routePosition;
+    public void arrive() {
+        this.state = ShipmentState.ARRIVED;
     }
 
-    // Setters
-    public void setState(ShipmentState state) {
-        this.state = state;
-    }
-
-    public void setDeparture(long departure) {
-        this.departure = departure;
-    }
-
-    public void setArrival(long arrival) {
-        this.arrival = arrival;
-    }
-
-    public void setRoutePosition(float routePosition) {
-        this.routePosition = routePosition;
+    public void markLost() {
+        this.state = ShipmentState.LOST;
     }
 }

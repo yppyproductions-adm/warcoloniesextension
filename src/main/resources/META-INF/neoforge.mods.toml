@@ -6,28 +6,30 @@ license="All Rights Reserved"
 modId="warcoloniesextension"
 version="1.0.0"
 displayName="War Colonies Extension"
-authors="Alessandra"
+authors="Alessandra YppyLê"
 description='''
-Extensão estratégica de guerra para colônias em Minecraft.
+Extensão de estratégia, guerra, logística e simulação
+para complementar o MineColonies com sistemas avançados
+de diplomacia, economia, construção virtual e invasões.
 '''
 
 [[dependencies.warcoloniesextension]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.warcoloniesextension]]
 modId="neoforge"
-type="required"
+mandatory=true
 versionRange="[21.1.216,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.warcoloniesextension]]
-modId="minecraft"
-type="required"
-versionRange="[1.21.1,1.22)"
-ordering="NONE"
-side="BOTH"
-
-[[dependencies.warcoloniesextension]]
 modId="minecolonies"
-type="optional"
+mandatory=true
 versionRange="*"
 ordering="NONE"
 side="BOTH"
