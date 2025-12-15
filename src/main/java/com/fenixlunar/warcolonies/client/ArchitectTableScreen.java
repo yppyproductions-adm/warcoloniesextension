@@ -27,9 +27,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
     // Você já está carregando texturas desse namespace hoje.
     private static final String NS = "warcoloniesextension";
 
-    // Fundo (layouthutpageactionsminwoinv.xml usa builder_paper.png)
-    private static final ResourceLocation BG_PAPER =
-            ResourceLocation.parse(NS + ":textures/gui/builderhut/builder_paper.png");
+        // Fundo (use MineColonies original builder paper)
+        private static final ResourceLocation BG_PAPER =
+            ResourceLocation.parse("minecolonies:textures/gui/builderhut/builder_paper.png");
 
     // Header sketch (layouthutpageactionsminwoinv.xml)
     private static final ResourceLocation SKETCH_LEFT =
@@ -55,24 +55,24 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
             ResourceLocation.parse("warcolonies:textures/gui/red_wax_information.png");
     private static final ResourceLocation ICON_CHEST =
             ResourceLocation.parse("warcolonies:textures/gui/chest.png");
-        // Side tab textures (copied from MineColonies modules)
+        // Side tab textures (use images from the `warcolonies` namespace)
         private static final ResourceLocation TAB_SIDE_1 =
-            ResourceLocation.parse(NS + ":textures/gui/modules/tab_side1.png");
+            ResourceLocation.parse("warcolonies:textures/gui/modules/tab_side1.png");
         private static final ResourceLocation TAB_SIDE_2 =
-            ResourceLocation.parse(NS + ":textures/gui/modules/tab_side2.png");
+            ResourceLocation.parse("warcolonies:textures/gui/modules/tab_side2.png");
         private static final ResourceLocation TAB_SIDE_3 =
-            ResourceLocation.parse(NS + ":textures/gui/modules/tab_side3.png");
+            ResourceLocation.parse("warcolonies:textures/gui/modules/tab_side3.png");
         private static final ResourceLocation TAB_SIDE_4 =
-            ResourceLocation.parse(NS + ":textures/gui/modules/tab_side4.png");
+            ResourceLocation.parse("warcolonies:textures/gui/modules/tab_side4.png");
 
         private static final ResourceLocation MODULE_INFO =
-            ResourceLocation.parse(NS + ":textures/gui/modules/info.png");
+            ResourceLocation.parse("warcolonies:textures/gui/modules/info.png");
         private static final ResourceLocation MODULE_SETTINGS =
-            ResourceLocation.parse(NS + ":textures/gui/modules/settings.png");
+            ResourceLocation.parse("warcolonies:textures/gui/modules/settings.png");
         private static final ResourceLocation MODULE_STOCK =
-            ResourceLocation.parse(NS + ":textures/gui/modules/stock.png");
+            ResourceLocation.parse("warcolonies:textures/gui/modules/stock.png");
         private static final ResourceLocation MODULE_INVENTORY =
-            ResourceLocation.parse(NS + ":textures/gui/modules/inventory.png");
+            ResourceLocation.parse("warcolonies:textures/gui/modules/inventory.png");
 
     // Tamanhos reais (MineColonies)
     private static final int BG_W = 190;
@@ -329,23 +329,22 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         // Fundo
         g.blit(BG_PAPER, left, top, 0, 0, BG_W, BG_H, BG_W, BG_H);
 
-        // Left side tabs (visual only) - draw a stack of tabs with icons
-        try {
-            final int tabX = left - 26; // position tabs to the left of the paper
-            int tabY = top + 30;
-            // draw 4 side tabs (use different side textures)
-            g.blit(TAB_SIDE_1, tabX, tabY, 0, 0, 26, 26, 26, 26);
-            g.blit(MODULE_INVENTORY, tabX + 4, tabY + 4, 0, 0, 18, 18, 18, 18);
-            tabY += 28;
-            g.blit(TAB_SIDE_2, tabX, tabY, 0, 0, 26, 26, 26, 26);
-            g.blit(MODULE_STOCK, tabX + 4, tabY + 4, 0, 0, 18, 18, 18, 18);
-            tabY += 28;
-            g.blit(TAB_SIDE_3, tabX, tabY, 0, 0, 26, 26, 26, 26);
-            g.blit(MODULE_SETTINGS, tabX + 4, tabY + 4, 0, 0, 18, 18, 18, 18);
-            tabY += 28;
-            g.blit(TAB_SIDE_4, tabX, tabY, 0, 0, 26, 26, 26, 26);
-            g.blit(MODULE_INFO, tabX + 4, tabY + 4, 0, 0, 18, 18, 18, 18);
-        } catch (final Throwable ignored) {}
+        // Left side tabs (draw using MineColonies assets and correct sizes).
+        // Use exact texture sizes: tab side = 32x26, module icons = 20x20.
+        final int tabX = left - 28; // overlap so tab sits over paper edge
+        int tabY = top + 24;
+
+        g.blit(TAB_SIDE_1, tabX, tabY, 0, 0, 32, 26, 32, 26);
+        g.blit(MODULE_INVENTORY, tabX + 6, tabY + 3, 0, 0, 20, 20, 20, 20);
+        tabY += 28;
+        g.blit(TAB_SIDE_2, tabX, tabY, 0, 0, 32, 26, 32, 26);
+        g.blit(MODULE_STOCK, tabX + 6, tabY + 3, 0, 0, 20, 20, 20, 20);
+        tabY += 28;
+        g.blit(TAB_SIDE_3, tabX, tabY, 0, 0, 32, 26, 32, 26);
+        g.blit(MODULE_SETTINGS, tabX + 6, tabY + 3, 0, 0, 20, 20, 20, 20);
+        tabY += 28;
+        g.blit(TAB_SIDE_4, tabX, tabY, 0, 0, 32, 26, 32, 26);
+        g.blit(MODULE_INFO, tabX + 6, tabY + 3, 0, 0, 20, 20, 20, 20);
 
         // Header sketch (layouthutpageactionsminwoinv.xml)
         g.blit(SKETCH_LEFT, left + 24, top + 12, 0, 0, SKETCH_L_W, SKETCH_L_H, SKETCH_L_W, SKETCH_L_H);
