@@ -12,7 +12,7 @@
       ],
       "vmArgs": [
         "@${workspaceFolder}/build/moddev/clientRunVmArgs.txt",
-        "-Dfml.modFolders=warcoloniesextension%%${workspaceFolder}/bin/main"
+        "-Dfml.modFolders\u003dwarcoloniesextension%%${workspaceFolder}/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "console": "internalConsole",
@@ -35,7 +35,7 @@
       ],
       "vmArgs": [
         "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/clientRunVmArgs.txt",
-        "-Dfml.modFolders=warcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
+        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "env": {},
@@ -57,7 +57,7 @@
       ],
       "vmArgs": [
         "@/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/build/moddev/serverRunVmArgs.txt",
-        "-Dfml.modFolders=warcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
+        "-Dfml.modFolders\u003dwarcoloniesextension%%/home/funixlunar/Documentos/Projetos/Yppy/WarColoniesDev/warcoloniesextension/bin/main"
       ],
       "cwd": "${workspaceFolder}/run",
       "env": {},

@@ -1,0 +1,12 @@
+<window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" size="400 244"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/ldtteam/BlockUI/version/main/src/main/resources/assets/blockui/gui/block_ui.xsd">
+    <image source="warcoloniesextension:textures/gui/builderhut/builder_paper_wide2.png" size="400 244"/>
+
+    
+
+    <text id="text" size="340 195" color="black" pos="40 15" textscale="0.8" textalign="MIDDLE"/>
+
+    
+
+    
+</window>

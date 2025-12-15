@@ -25,7 +25,7 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         // Delivery Priority é autoritativa no menu (servidor). Cliente apenas lê via DataSlot.
 
     // Você já está carregando texturas desse namespace hoje.
-    private static final String NS = "warcolonies";
+    private static final String NS = "warcoloniesextension";
 
     // Fundo (layouthutpageactionsminwoinv.xml usa builder_paper.png)
     private static final ResourceLocation BG_PAPER =
@@ -52,9 +52,27 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
     // Ícones (layouthutpageactionsminwoinv.xml / layouthutpageactionsmin.xml)
     private static final ResourceLocation ICON_INFO =
-            ResourceLocation.parse(NS + ":textures/gui/red_wax_information.png");
+            ResourceLocation.parse("warcolonies:textures/gui/red_wax_information.png");
     private static final ResourceLocation ICON_CHEST =
-            ResourceLocation.parse(NS + ":textures/gui/chest.png");
+            ResourceLocation.parse("warcolonies:textures/gui/chest.png");
+        // Side tab textures (copied from MineColonies modules)
+        private static final ResourceLocation TAB_SIDE_1 =
+            ResourceLocation.parse(NS + ":textures/gui/modules/tab_side1.png");
+        private static final ResourceLocation TAB_SIDE_2 =
+            ResourceLocation.parse(NS + ":textures/gui/modules/tab_side2.png");
+        private static final ResourceLocation TAB_SIDE_3 =
+            ResourceLocation.parse(NS + ":textures/gui/modules/tab_side3.png");
+        private static final ResourceLocation TAB_SIDE_4 =
+            ResourceLocation.parse(NS + ":textures/gui/modules/tab_side4.png");
+
+        private static final ResourceLocation MODULE_INFO =
+            ResourceLocation.parse(NS + ":textures/gui/modules/info.png");
+        private static final ResourceLocation MODULE_SETTINGS =
+            ResourceLocation.parse(NS + ":textures/gui/modules/settings.png");
+        private static final ResourceLocation MODULE_STOCK =
+            ResourceLocation.parse(NS + ":textures/gui/modules/stock.png");
+        private static final ResourceLocation MODULE_INVENTORY =
+            ResourceLocation.parse(NS + ":textures/gui/modules/inventory.png");
 
     // Tamanhos reais (MineColonies)
     private static final int BG_W = 190;
@@ -124,9 +142,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 () -> {
                     // MVP: editar nome é placeholder (PÓS-MVP: abrir input e sync com servidor)
                     if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: editar nome (placeholder)"), false);
+                        minecraft.player.displayClientMessage(Component.literal("PLACEHOLDER"), false);
                     }
-                }, Component.empty()
+                }, Component.empty() // icon-only: no label visible, tooltip can be added later
         ));
 
         // build pos="30 110" size="129 17"
@@ -137,9 +155,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 () -> {
                     // MVP: build action placeholder
                     if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: Build/Repair (placeholder)"), false);
+                        minecraft.player.displayClientMessage(Component.literal("PLACEHOLDER"), false);
                     }
-                }, Component.empty()
+                }, Component.literal("PLACEHOLDER")
         ));
 
         // info pos="14 214" size="17 17"
@@ -150,9 +168,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 () -> {
                     // MVP: info/help placeholder
                     if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: Help/Info (placeholder)"), false);
+                        minecraft.player.displayClientMessage(Component.literal("PLACEHOLDER"), false);
                     }
-                }, Component.empty()
+                }, Component.empty() // icon only, tooltip on hover later
         ));
 
         // =========================
@@ -167,9 +185,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 () -> {
                     // MVP: inventory placeholder
                     if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: Inventory (placeholder)"), false);
+                        minecraft.player.displayClientMessage(Component.literal("PLACEHOLDER"), false);
                     }
-                }, Component.empty()
+                }, Component.literal("PLACEHOLDER")
         ));
 
         // allinventory pos="159 214" size="17 17"
@@ -180,9 +198,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 () -> {
                     // MVP: all inventory placeholder
                     if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: All Inventory (placeholder)"), false);
+                        minecraft.player.displayClientMessage(Component.literal("PLACEHOLDER"), false);
                     }
-                }, Component.empty()
+                }, Component.empty() // icon-only
         ));
 
         // =========================
@@ -197,9 +215,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 () -> {
                     // MVP: hire/manage placeholder
                     if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: Hire/Manage (placeholder)"), false);
+                        minecraft.player.displayClientMessage(Component.literal("PLACEHOLDER"), false);
                     }
-                }, Component.empty()
+                }, Component.literal("PLACEHOLDER")
         ));
 
         // recall pos="30 92" size="129 17"
@@ -210,9 +228,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                 () -> {
                     // MVP: recall placeholder
                     if (minecraft != null && minecraft.player != null) {
-                        minecraft.player.displayClientMessage(Component.literal("MVP: Recall (placeholder)"), false);
+                        minecraft.player.displayClientMessage(Component.literal("PLACEHOLDER"), false);
                     }
-                }, Component.empty()
+                }, Component.literal("PLACEHOLDER")
         ));
 
         // deliveryPrioDown pos="127 135" size="14 15"
@@ -250,7 +268,31 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
                     if (minecraft != null && minecraft.gameMode != null) {
                         minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 0);
                     }
-                }, Component.literal("Operate")
+                }, Component.literal("PLACEHOLDER")
+        ));
+
+        // Sawmill toggle (ID 3)
+        this.addRenderableWidget(new TexturedButton(
+                left + 30, top + 174,
+                MEDIUM_LARGE_W, MEDIUM_LARGE_H,
+                BTN_MEDIUM_LARGE, MEDIUM_LARGE_W, MEDIUM_LARGE_H,
+                () -> {
+                    if (minecraft != null && minecraft.gameMode != null) {
+                        minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 3);
+                    }
+                }, Component.literal("PLACEHOLDER")
+        ));
+
+        // Teach selected categories (ID 4)
+        this.addRenderableWidget(new TexturedButton(
+                left + 30, top + 194,
+                MEDIUM_LARGE_W, MEDIUM_LARGE_H,
+                BTN_MEDIUM_LARGE, MEDIUM_LARGE_W, MEDIUM_LARGE_H,
+                () -> {
+                    if (minecraft != null && minecraft.gameMode != null) {
+                        minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 4);
+                    }
+                }, Component.literal("PLACEHOLDER")
         ));
 
         // =========================
@@ -287,6 +329,24 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         // Fundo
         g.blit(BG_PAPER, left, top, 0, 0, BG_W, BG_H, BG_W, BG_H);
 
+        // Left side tabs (visual only) - draw a stack of tabs with icons
+        try {
+            final int tabX = left - 26; // position tabs to the left of the paper
+            int tabY = top + 30;
+            // draw 4 side tabs (use different side textures)
+            g.blit(TAB_SIDE_1, tabX, tabY, 0, 0, 26, 26, 26, 26);
+            g.blit(MODULE_INVENTORY, tabX + 4, tabY + 4, 0, 0, 18, 18, 18, 18);
+            tabY += 28;
+            g.blit(TAB_SIDE_2, tabX, tabY, 0, 0, 26, 26, 26, 26);
+            g.blit(MODULE_STOCK, tabX + 4, tabY + 4, 0, 0, 18, 18, 18, 18);
+            tabY += 28;
+            g.blit(TAB_SIDE_3, tabX, tabY, 0, 0, 26, 26, 26, 26);
+            g.blit(MODULE_SETTINGS, tabX + 4, tabY + 4, 0, 0, 18, 18, 18, 18);
+            tabY += 28;
+            g.blit(TAB_SIDE_4, tabX, tabY, 0, 0, 26, 26, 26, 26);
+            g.blit(MODULE_INFO, tabX + 4, tabY + 4, 0, 0, 18, 18, 18, 18);
+        } catch (final Throwable ignored) {}
+
         // Header sketch (layouthutpageactionsminwoinv.xml)
         g.blit(SKETCH_LEFT, left + 24, top + 12, 0, 0, SKETCH_L_W, SKETCH_L_H, SKETCH_L_W, SKETCH_L_H);
         g.blit(SKETCH_CENTER, left + 30, top + 12, 0, 0, 130, 15, SKETCH_C_TEX_W, SKETCH_C_TEX_H);
@@ -319,12 +379,13 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
             g.drawString(this.font, prioText, left + 30, top + 135, 0xFF000000, false);
         }
 
-        // deliveryPrioDown/up labels "-" "+"
-        drawCenteredInRectNoShadow(g, Component.literal("-"), left + 127, top + 135, MINI_W, MINI_H, 0xFF000000);
-        drawCenteredInRectNoShadow(g, Component.literal("+"), left + 144, top + 135, MINI_W, MINI_H, 0xFF000000);
+        // Sawmill enabled indicator
+        if (this.font != null) {
+            final Component sawText = Component.literal("Sawmill: " + (this.menu.isSawmillEnabled() ? "ON" : "OFF"));
+            g.drawString(this.font, sawText, left + 30, top + 172, 0xFF000000, false);
+        }
 
-        // forcePickup pos="30 154" size="129 17"
-        drawCenteredInRectNoShadow(g, LBL_FORCE_PICKUP, left + 30, top + 154, MEDIUM_LARGE_W, MEDIUM_LARGE_H, 0xFF000000);
+        // deliveryPrioDown/up labels removed — buttons render their own text now
 
         // ===== workers list area (pos="13 43" size="164 30") =====
         // MineColonies: list com view/box linewidth=0 e texto centralizado.

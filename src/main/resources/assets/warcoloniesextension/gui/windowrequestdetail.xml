@@ -1,0 +1,23 @@
+<window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" size="190 133"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/ldtteam/BlockUI/version/main/src/main/resources/assets/blockui/gui/block_ui.xsd">
+
+    <image source="warcoloniesextension:textures/gui/citizen/colonist_paper.png" size="100% 100%"/>
+
+    <text size="190 11" pos="0 13" textalign="MIDDLE" color="black" label="$(com.minecolonies.coremod.gui.citizen.requests)"/>
+
+    <itemicon id="requestStack" size="24 24" pos="12 30"/>
+    <image id="deliveryImage" source="minecraft:textures/misc/shadow.png" size="24 24" pos="12 30" visible="false"/>
+
+    <text id="requester" size="135 9" pos="40 30" color="black"/>
+    <text id="targetLocation" size="135 9" pos="40 40" color="black"/>
+    <text id="resolver" size="135 9" pos="40 50" color="black"/>
+
+    <text id="shortDetail" size="170 40" pos="12 60" color="black"/>
+    <itemicon id="detailIcon" size="9 9" pos="80 75"/>
+
+    
+
+    
+
+    
+</window>

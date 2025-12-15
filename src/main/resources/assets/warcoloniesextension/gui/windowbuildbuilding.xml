@@ -1,0 +1,46 @@
+<window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/ldtteam/BlockUI/version/main/src/main/resources/assets/blockui/gui/block_ui.xsd"
+        lightbox="true">
+
+    
+    <dropdown id="style"
+              size="129 17"
+              pos="55 0"
+              maxContentHeight="75"
+              dropDownSize="140 75"
+              source="warcoloniesextension:textures/gui/builderhut/builder_button_medium_large.png"
+              color="black">
+        <view size="100% 15">
+            <text id="id" size="100% 100%" label="" pos="0 0"/>
+            
+        </view>
+    </dropdown>
+    
+
+    <dropdown id="worker"
+              size="129 17"
+              pos="225 0"
+              maxContentHeight="75"
+              dropDownSize="140 75"
+              source="warcoloniesextension:textures/gui/builderhut/builder_button_medium_large.png"
+              color="black">
+        <view size="100% 15">
+            <text id="id" size="100% 100%" label="" pos="0 0"/>
+            
+        </view>
+    </dropdown>
+
+    
+
+    <list id="resources" size="80% 80%" pos="30 20">
+        <box size="100% 30" linewidth="1">
+            <itemicon id="resourceIcon" size="24 24" pos="3 3"/>
+            <text id="resourceName" size="225 12" pos="33 9" color="white"/>
+            <text id="resourceQuantity" align="MIDDLE_RIGHT" size="24 12" pos="20 0" color="white"/>
+        </box>
+    </list>
+    
+    
+    
+    
+</window>

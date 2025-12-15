@@ -17,6 +17,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import com.fenixlunar.warcolonies.data.ArchitectSavedData;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -27,6 +28,10 @@ public class ArchitectTableMenu extends AbstractContainerMenu
 {
     private final ContainerLevelAccess access;
     private int deliveryPriority = 1;
+    private int sawmillEnabled = 0; // 0 = disabled, 1 = enabled
+    // bit indexes for categories
+    private static final int CAT_SAWMILL = 0;
+    private static final int CAT_STONE = 1; // placeholder for future categories
 
     public ArchitectTableMenu(final int containerId, final Inventory playerInventory)
     {
@@ -54,7 +59,34 @@ public class ArchitectTableMenu extends AbstractContainerMenu
             }
         });
 
+        // Sawmill category enabled flag sync (0/1)
+        this.addDataSlot(new DataSlot() {
+            @Override
+            public int get()
+            {
+                return sawmillEnabled;
+            }
+
+            @Override
+            public void set(final int value)
+            {
+                sawmillEnabled = value;
+            }
+        });
+
         // MVP: sem slots mesmo (não desenha inventário nem hotbar)
+
+        // If we have a real access (server), try to load persisted flags for this block
+        this.access.evaluate((level, pos) -> {
+            try {
+                if (level instanceof ServerLevel serverLevel) {
+                    final ArchitectSavedData saved = ArchitectSavedData.get(serverLevel);
+                    this.sawmillEnabled = saved.getSawmillEnabled(pos) ? 1 : 0;
+                }
+            } catch (final Throwable ignored) {
+            }
+            return 0;
+        }, 0);
     }
 
     // Client-side constructor used by container factory (reads pos if present)
@@ -110,6 +142,11 @@ public class ArchitectTableMenu extends AbstractContainerMenu
         return deliveryPriority;
     }
 
+    public boolean isSawmillEnabled()
+    {
+        return sawmillEnabled != 0;
+    }
+
     @Override
     public boolean clickMenuButton(final Player player, final int id)
     {
@@ -133,28 +170,74 @@ public class ArchitectTableMenu extends AbstractContainerMenu
         }
 
         if (id == 0) {
-            // Operate: spawn a few example items at the table position (server-side)
+            // Operate: coordinate constructions / teach enabled categories (no item spawning)
             this.access.evaluate((level, pos) -> {
-                if (level instanceof ServerLevel serverLevel) {
-                    final BlockPos spawnPos = pos.above();
+                try {
+                    if (level instanceof ServerLevel serverLevel) {
+                        java.util.List<String> huts = com.fenixlunar.warcolonies.integration.ArchitectMineColoniesBridge.findNearbyHuts(serverLevel, pos);
+                        if (huts.isEmpty()) {
+                            sp.sendSystemMessage(Component.literal("Nenhuma colônia MineColonies próxima encontrada para ensinar receitas."));
+                        } else {
+                            sp.sendSystemMessage(Component.literal("Encontradas " + huts.size() + " construções/huts potenciais. Iniciando ensino para categorias habilitadas."));
+                        }
 
-                    // Example "pedido": 32 torches, 64 planks (oak), 16 stairs (oak)
-                    final ItemStack torches = new ItemStack(Items.TORCH, 32);
-                    final ItemStack planks = new ItemStack(Items.OAK_PLANKS, 64);
-                    final ItemStack stairs = new ItemStack(Items.OAK_STAIRS, 16);
+                        boolean didAnything = false;
+                        if (this.isSawmillEnabled()) {
+                            didAnything = true;
+                            com.fenixlunar.warcolonies.integration.ArchitectMineColoniesBridge.teachSawmillPlaceholder(serverLevel, pos, sp);
+                        }
 
-                    final ItemEntity e1 = new ItemEntity(serverLevel, spawnPos.getX() + 0.5, spawnPos.getY() + 1.0, spawnPos.getZ() + 0.5, torches);
-                    final ItemEntity e2 = new ItemEntity(serverLevel, spawnPos.getX() + 0.6, spawnPos.getY() + 1.0, spawnPos.getZ() + 0.6, planks);
-                    final ItemEntity e3 = new ItemEntity(serverLevel, spawnPos.getX() + 0.4, spawnPos.getY() + 1.0, spawnPos.getZ() + 0.4, stairs);
-
-                    serverLevel.addFreshEntity(e1);
-                    serverLevel.addFreshEntity(e2);
-                    serverLevel.addFreshEntity(e3);
+                        if (!didAnything) {
+                            sp.sendSystemMessage(Component.literal("Nenhuma categoria selecionada para ensinar. Ative categorias no painel Materiais."));
+                        }
+                    }
+                } catch (final Throwable t) {
+                    sp.sendSystemMessage(Component.literal("Erro ao executar Operate: " + t.toString()));
                 }
-                return null;
-            }, null);
+                return 0;
+            }, 0);
 
-            sp.sendSystemMessage(Component.literal("MVP: Pedido criado (items spawned)"));
+            sp.sendSystemMessage(Component.literal("Operação iniciada: ensino disparado para categorias selecionadas."));
+            return true;
+        }
+
+        if (id == 3) {
+            // Toggle sawmill category
+            this.sawmillEnabled = this.sawmillEnabled == 0 ? 1 : 0;
+            this.broadcastChanges();
+            // Persist change
+            this.access.evaluate((level, pos) -> {
+                try {
+                    if (level instanceof ServerLevel serverLevel) {
+                        final ArchitectSavedData saved = ArchitectSavedData.get(serverLevel);
+                        saved.setSawmillEnabled(pos, this.sawmillEnabled != 0);
+                    }
+                } catch (final Throwable ignored) {
+                }
+                return 0;
+            }, 0);
+            sp.sendSystemMessage(Component.literal("Sawmill category toggled: " + (this.sawmillEnabled != 0 ? "ENABLED" : "DISABLED")));
+            return true;
+        }
+
+        if (id == 4) {
+            // Teach selected categories using bridge
+            this.access.evaluate((level, pos) -> {
+                try {
+                    if (level instanceof ServerLevel serverLevel) {
+                        java.util.List<String> huts = com.fenixlunar.warcolonies.integration.ArchitectMineColoniesBridge.findNearbyHuts(serverLevel, pos);
+                        if (huts.isEmpty()) {
+                            sp.sendSystemMessage(Component.literal("No nearby MineColonies colony found to teach recipes."));
+                        } else {
+                            sp.sendSystemMessage(Component.literal("Found " + huts.size() + " potential buildings/huts. Teaching placeholder."));
+                        }
+                        com.fenixlunar.warcolonies.integration.ArchitectMineColoniesBridge.teachSawmillPlaceholder(serverLevel, pos, sp);
+                    }
+                } catch (final Throwable t) {
+                    sp.sendSystemMessage(Component.literal("Error while attempting to teach recipes: " + t.toString()));
+                }
+                return 0;
+            }, 0);
             return true;
         }
 

@@ -28,7 +28,14 @@ public class ArchitectTableBlock extends Block {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            player.openMenu(new MenuProvider() {
+            try {
+                if (player instanceof net.minecraft.server.level.ServerPlayer) {
+                    ((net.minecraft.server.level.ServerPlayer) player).sendSystemMessage(Component.literal("DEBUG: Architect table used - opening menu"));
+                }
+            } catch (final Throwable ignored) {}
+
+            try {
+                player.openMenu(new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
                     return Component.translatable("container.warcoloniesextension.architect_table");
@@ -37,9 +44,24 @@ public class ArchitectTableBlock extends Block {
                 @Nullable
                 @Override
                 public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-                    return new ArchitectTableMenu(containerId, playerInventory, ContainerLevelAccess.create(level, pos));
+                    try {
+                        return new ArchitectTableMenu(containerId, playerInventory, ContainerLevelAccess.create(level, pos));
+                    } catch (final Throwable t) {
+                        if (player instanceof net.minecraft.server.level.ServerPlayer) {
+                            ((net.minecraft.server.level.ServerPlayer) player).sendSystemMessage(Component.literal("ERROR: couldn't create ArchitectTableMenu: " + t.toString()));
+                        }
+                        return null;
+                    }
                 }
             });
+            } catch (final Throwable t) {
+                try {
+                    if (player instanceof net.minecraft.server.level.ServerPlayer) {
+                        ((net.minecraft.server.level.ServerPlayer) player).sendSystemMessage(Component.literal("ERROR: openMenu failed: " + t.toString()));
+                    }
+                } catch (final Throwable ignored) {}
+                return InteractionResult.FAIL;
+            }
             return InteractionResult.CONSUME;
         }
     }

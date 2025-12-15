@@ -1,0 +1,10 @@
+<window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" size="190 133"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/ldtteam/BlockUI/version/main/src/main/resources/assets/blockui/gui/block_ui.xsd">
+    <image source="warcoloniesextension:textures/gui/citizen/colonist_paper.png" size="100% 100%"/>
+
+    
+
+    <text id="text" size="150 75" pos="15 15" color="black" text="$(com.minecolonies.coremod.gui.reactivate.message)" textscale="0.75"/>
+
+    
+</window>
