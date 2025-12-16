@@ -71,13 +71,13 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
     // Side tab textures (use images located in our `warcoloniesextension` assets)
         // Use padded variants for experiment A1 (1px transparent border) to check atlas bleeding
         private static final ResourceLocation TAB_SIDE_1 =
-            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side1_filled.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side1.png");
         private static final ResourceLocation TAB_SIDE_2 =
-            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side2_filled.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side2.png");
         private static final ResourceLocation TAB_SIDE_3 =
-            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side3_filled.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side3.png");
         private static final ResourceLocation TAB_SIDE_4 =
-            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side4_filled.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side4.png");
 
         // Runtime (non-atlas) resource locations we register to bypass atlas packing
         private static final ResourceLocation TAB_SIDE_1_RUNTIME =
@@ -100,9 +100,26 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
     private static final ResourceLocation MODULE_INVENTORY =
             ResourceLocation.parse("warcoloniesextension:textures/gui/modules/inventory.png");
 
+    // Runtime-swappable resources — default to our packaged assets.
+    private ResourceLocation resBgPaper = BG_PAPER;
+    private ResourceLocation resSketchLeft = SKETCH_LEFT;
+    private ResourceLocation resSketchCenter = SKETCH_CENTER;
+    private ResourceLocation resSketchRight = SKETCH_RIGHT;
+    private ResourceLocation resBtnEdit = BTN_EDIT;
+    private ResourceLocation resBtnMediumLarge = BTN_MEDIUM_LARGE;
+    private ResourceLocation resBtnMedium = BTN_MEDIUM;
+    private ResourceLocation resBtnMini = BTN_MINI;
+    private ResourceLocation resIconInfo = ICON_INFO;
+    private ResourceLocation resIconChest = ICON_CHEST;
+
         // Tamanhos reais (MineColonies)
         private static final int BG_W = 190;
         private static final int BG_H = 244;
+
+        // For the Builder-hut window (reference XML) we use the explicit size
+        // and do NOT apply BlockUI lightbox/auto-size. Keep false to match
+        // MineColonies' builder window behavior.
+        private static final boolean USE_BLOCKUI_STYLE = false;
 
     private static final int EDIT_W = 15;
     private static final int EDIT_H = 15;
@@ -159,6 +176,11 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
     {
         super.init();
 
+        // Builder-hut reference uses explicit size 190x244 (layouthutpageactionsminwoinv.xml).
+        // Use those exact values and keep default centering; do not auto-resize or apply lightbox.
+        this.imageWidth = BG_W;
+        this.imageHeight = BG_H;
+
         final int left = this.leftPos;
         final int top  = this.topPos;
 
@@ -168,9 +190,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
         // editName pos="150 11" size="15 15"
         this.addRenderableWidget(new TexturedButton(
-                left + 150, top + 11,
-                EDIT_W, EDIT_H,
-                BTN_EDIT, EDIT_W, EDIT_H,
+            left + 150, top + 11,
+            EDIT_W, EDIT_H,
+            resBtnEdit, EDIT_W, EDIT_H,
                 () -> {
                     // MVP: editar nome é placeholder (PÓS-MVP: abrir input e sync com servidor)
                     if (minecraft != null && minecraft.player != null) {
@@ -181,9 +203,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
         // build pos="30 110" size="129 17"
         this.addRenderableWidget(new TexturedButton(
-                left + 30, top + 110,
-                MEDIUM_LARGE_W, MEDIUM_LARGE_H,
-                BTN_MEDIUM_LARGE, MEDIUM_LARGE_W, MEDIUM_LARGE_H,
+            left + 30, top + 110,
+            MEDIUM_LARGE_W, MEDIUM_LARGE_H,
+            resBtnMediumLarge, MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 () -> {
                     // MVP: build action placeholder
                     if (minecraft != null && minecraft.player != null) {
@@ -194,9 +216,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
         // info pos="14 214" size="17 17"
         this.addRenderableWidget(new TexturedButton(
-                left + 14, top + 214,
-                ICON_17, ICON_17,
-                ICON_INFO, ICON_17, ICON_17,
+            left + 14, top + 214,
+            ICON_17, ICON_17,
+            resIconInfo, ICON_17, ICON_17,
                 () -> {
                     // MVP: info/help placeholder
                     if (minecraft != null && minecraft.player != null) {
@@ -211,9 +233,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
         // inventory pos="52 214" size="86 17"
         this.addRenderableWidget(new TexturedButton(
-                left + 52, top + 214,
-                MEDIUM_W, MEDIUM_H,
-                BTN_MEDIUM, MEDIUM_W, MEDIUM_H,
+            left + 52, top + 214,
+            MEDIUM_W, MEDIUM_H,
+            resBtnMedium, MEDIUM_W, MEDIUM_H,
                 () -> {
                     // MVP: inventory placeholder
                     if (minecraft != null && minecraft.player != null) {
@@ -224,9 +246,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
         // allinventory pos="159 214" size="17 17"
         this.addRenderableWidget(new TexturedButton(
-                left + 159, top + 214,
-                ICON_17, ICON_17,
-                ICON_CHEST, ICON_17, ICON_17,
+            left + 159, top + 214,
+            ICON_17, ICON_17,
+            resIconChest, ICON_17, ICON_17,
                 () -> {
                     // MVP: all inventory placeholder
                     if (minecraft != null && minecraft.player != null) {
@@ -350,6 +372,8 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
             ));
         }
         */
+        
+        // For the builder-hut reference we intentionally keep the full BG_H.
     }
 
     @Override
@@ -358,8 +382,8 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         final int left = this.leftPos;
         final int top  = this.topPos;
 
-        // Fundo
-        g.blit(BG_PAPER, left, top, 0, 0, BG_W, BG_H, BG_W, BG_H);
+        // Fundo (desenha o papel no tamanho canônico do Builder: 190x244)
+        g.blit(resBgPaper, left, top, 0, 0, BG_W, BG_H, BG_W, BG_H);
 
         // Debug: try to dump the minecolonies atlas once to run/atlas-dump-minecolonies_gui.png
         if (!dumpedMinecoloniesAtlas) {
@@ -456,9 +480,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         
 
         // Header sketch (layouthutpageactionsminwoinv.xml)
-        g.blit(SKETCH_LEFT, left + 24, top + 12, 0, 0, SKETCH_L_W, SKETCH_L_H, SKETCH_L_W, SKETCH_L_H);
-        g.blit(SKETCH_CENTER, left + 30, top + 12, 0, 0, 130, 15, SKETCH_C_TEX_W, SKETCH_C_TEX_H);
-        g.blit(SKETCH_RIGHT, left + 160, top + 12, 0, 0, SKETCH_R_W, SKETCH_R_H, SKETCH_R_W, SKETCH_R_H);
+        g.blit(resSketchLeft, left + 24, top + 12, 0, 0, SKETCH_L_W, SKETCH_L_H, SKETCH_L_W, SKETCH_L_H);
+        g.blit(resSketchCenter, left + 30, top + 12, 0, 0, 130, 15, SKETCH_C_TEX_W, SKETCH_C_TEX_H);
+        g.blit(resSketchRight, left + 160, top + 12, 0, 0, SKETCH_R_W, SKETCH_R_H, SKETCH_R_W, SKETCH_R_H);
 
         // name pos="30 14" size="128 11" color="red"
         // (no MineColonies isso é o nome do prédio; aqui fica placeholder visual)
@@ -513,12 +537,35 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         try {
             if (this.minecraft == null || this.minecraft.getResourceManager() == null || this.minecraft.getTextureManager() == null) return;
 
+            // Use packaged tab textures (no runtime dependency on MineColonies files)
             loadAndRegister(TAB_SIDE_1, TAB_SIDE_1_RUNTIME);
             loadAndRegister(TAB_SIDE_2, TAB_SIDE_2_RUNTIME);
             loadAndRegister(TAB_SIDE_3, TAB_SIDE_3_RUNTIME);
             loadAndRegister(TAB_SIDE_4, TAB_SIDE_4_RUNTIME);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // No runtime dependency on MineColonies files: we use copied values from
+    // the MineColonies XMLs that are present in the repo to emulate behaviour.
+
+    // Return a ResourceLocation for a tab image, preferring MineColonies resource namespace.
+    private ResourceLocation findTabSource(final int idx) {
+        final String mcPath = "minecolonies:textures/gui/modules/tab_side" + idx + ".png";
+        final ResourceLocation mc = ResourceLocation.parse(mcPath);
+        try {
+            if (this.minecraft != null && this.minecraft.getResourceManager() != null) {
+                java.util.Optional<Resource> opt = this.minecraft.getResourceManager().getResource(mc);
+                if (opt.isPresent()) return mc;
+            }
+        } catch (Exception ignored) {}
+        // fallback to packaged resource
+        switch (idx) {
+            case 1: return TAB_SIDE_1;
+            case 2: return TAB_SIDE_2;
+            case 3: return TAB_SIDE_3;
+            default: return TAB_SIDE_4;
         }
     }
 
@@ -595,6 +642,8 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
     @Override
     public void render(final GuiGraphics g, final int mouseX, final int mouseY, final float partialTicks)
     {
+        // For the Builder reference we do not draw a BlockUI lightbox; use
+        // the standard background rendering and draw the GUI on top.
         this.renderBackground(g, mouseX, mouseY, partialTicks);
         super.render(g, mouseX, mouseY, partialTicks);
     }
