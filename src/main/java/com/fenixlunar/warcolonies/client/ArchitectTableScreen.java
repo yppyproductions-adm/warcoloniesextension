@@ -7,6 +7,18 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.server.packs.resources.Resource;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 
 /**
  * Layout 1:1 baseado nos XML do MineColonies:
@@ -24,12 +36,12 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 {
         // Delivery Priority é autoritativa no menu (servidor). Cliente apenas lê via DataSlot.
 
-    // Você já está carregando texturas desse namespace hoje.
-    private static final String NS = "warcoloniesextension";
+        // Use the canonical images from the `warcoloniesextension` assets (we store MineColonies images here)
+        private static final String NS = "warcoloniesextension";
 
-        // Fundo (use MineColonies original builder paper)
-        private static final ResourceLocation BG_PAPER =
-            ResourceLocation.parse("minecolonies:textures/gui/builderhut/builder_paper.png");
+    // Fundo (layouthutpageactionsminwoinv.xml usa builder_paper.png)
+    private static final ResourceLocation BG_PAPER =
+            ResourceLocation.parse(NS + ":textures/gui/builderhut/builder_paper.png");
 
     // Header sketch (layouthutpageactionsminwoinv.xml)
     private static final ResourceLocation SKETCH_LEFT =
@@ -52,31 +64,45 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
     // Ícones (layouthutpageactionsminwoinv.xml / layouthutpageactionsmin.xml)
     private static final ResourceLocation ICON_INFO =
-            ResourceLocation.parse("warcolonies:textures/gui/red_wax_information.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/red_wax_information.png");
     private static final ResourceLocation ICON_CHEST =
-            ResourceLocation.parse("warcolonies:textures/gui/chest.png");
-        // Side tab textures (use images from the `warcolonies` namespace)
+            ResourceLocation.parse("warcoloniesextension:textures/gui/chest.png");
+
+    // Side tab textures (use images located in our `warcoloniesextension` assets)
+        // Use padded variants for experiment A1 (1px transparent border) to check atlas bleeding
         private static final ResourceLocation TAB_SIDE_1 =
-            ResourceLocation.parse("warcolonies:textures/gui/modules/tab_side1.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side1_filled.png");
         private static final ResourceLocation TAB_SIDE_2 =
-            ResourceLocation.parse("warcolonies:textures/gui/modules/tab_side2.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side2_filled.png");
         private static final ResourceLocation TAB_SIDE_3 =
-            ResourceLocation.parse("warcolonies:textures/gui/modules/tab_side3.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side3_filled.png");
         private static final ResourceLocation TAB_SIDE_4 =
-            ResourceLocation.parse("warcolonies:textures/gui/modules/tab_side4.png");
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side4_filled.png");
 
-        private static final ResourceLocation MODULE_INFO =
-            ResourceLocation.parse("warcolonies:textures/gui/modules/info.png");
-        private static final ResourceLocation MODULE_SETTINGS =
-            ResourceLocation.parse("warcolonies:textures/gui/modules/settings.png");
-        private static final ResourceLocation MODULE_STOCK =
-            ResourceLocation.parse("warcolonies:textures/gui/modules/stock.png");
-        private static final ResourceLocation MODULE_INVENTORY =
-            ResourceLocation.parse("warcolonies:textures/gui/modules/inventory.png");
+        // Runtime (non-atlas) resource locations we register to bypass atlas packing
+        private static final ResourceLocation TAB_SIDE_1_RUNTIME =
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side1_runtime.png");
+        private static final ResourceLocation TAB_SIDE_2_RUNTIME =
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side2_runtime.png");
+        private static final ResourceLocation TAB_SIDE_3_RUNTIME =
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side3_runtime.png");
+        private static final ResourceLocation TAB_SIDE_4_RUNTIME =
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/tab_side4_runtime.png");
 
-    // Tamanhos reais (MineColonies)
-    private static final int BG_W = 190;
-    private static final int BG_H = 244;
+        private boolean runtimeTabTexturesLoaded = false;
+
+    private static final ResourceLocation MODULE_INFO =
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/info.png");
+    private static final ResourceLocation MODULE_SETTINGS =
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/settings.png");
+    private static final ResourceLocation MODULE_STOCK =
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/stock.png");
+    private static final ResourceLocation MODULE_INVENTORY =
+            ResourceLocation.parse("warcoloniesextension:textures/gui/modules/inventory.png");
+
+        // Tamanhos reais (MineColonies)
+        private static final int BG_W = 190;
+        private static final int BG_H = 244;
 
     private static final int EDIT_W = 15;
     private static final int EDIT_H = 15;
@@ -121,6 +147,12 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         this.imageWidth = BG_W;
         this.imageHeight = BG_H;
     }
+
+    // debug: only dump once per screen open
+    private boolean dumpedMinecoloniesAtlas = false;
+    // Debug render modes for isolating artifacts:
+    // 0 = normal, 1 = skip tabs, 2 = draw tabs as solid boxes, 3 = skip paper, 4 = skip sketches
+    private static final int DEBUG_RENDER_MODE = 0;
 
     @Override
     protected void init()
@@ -261,7 +293,7 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
         // Operate (MVP) pos="30 154" size="129 17" -> ID 0
         this.addRenderableWidget(new TexturedButton(
-                left + 30, top + 154,
+            left + 30, top + 154,
                 MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 BTN_MEDIUM_LARGE, MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 () -> {
@@ -273,7 +305,7 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
         // Sawmill toggle (ID 3)
         this.addRenderableWidget(new TexturedButton(
-                left + 30, top + 174,
+            left + 30, top + 174,
                 MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 BTN_MEDIUM_LARGE, MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 () -> {
@@ -285,7 +317,7 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
 
         // Teach selected categories (ID 4)
         this.addRenderableWidget(new TexturedButton(
-                left + 30, top + 194,
+            left + 30, top + 194,
                 MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 BTN_MEDIUM_LARGE, MEDIUM_LARGE_W, MEDIUM_LARGE_H,
                 () -> {
@@ -329,22 +361,99 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         // Fundo
         g.blit(BG_PAPER, left, top, 0, 0, BG_W, BG_H, BG_W, BG_H);
 
+        // Debug: try to dump the minecolonies atlas once to run/atlas-dump-minecolonies_gui.png
+        if (!dumpedMinecoloniesAtlas) {
+            dumpedMinecoloniesAtlas = true;
+            try {
+                final ResourceLocation atlas = ResourceLocation.parse("minecolonies:textures/atlas/minecolonies_gui.png");
+                if (this.minecraft != null && this.minecraft.getTextureManager() != null) {
+                    try {
+                        Object tex = this.minecraft.getTextureManager().getTexture(atlas);
+                        if (tex != null) {
+                            int texId = -1;
+                            for (Field f : tex.getClass().getDeclaredFields()) {
+                                if (f.getType() == int.class) {
+                                    f.setAccessible(true);
+                                    int v = f.getInt(tex);
+                                    if (v > 0) { texId = v; break; }
+                                }
+                            }
+                            if (texId > 0) {
+                                GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+                                int width = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+                                int height = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
+                                if (width > 0 && height > 0) {
+                                    ByteBuffer buf = BufferUtils.createByteBuffer(width * height * 4);
+                                    GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE, buf);
+                                    BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                                    for (int y = 0; y < height; y++) {
+                                        for (int x = 0; x < width; x++) {
+                                            int i = (x + (height - 1 - y) * width) * 4;
+                                            int b = buf.get(i) & 0xFF;
+                                            int gcol = buf.get(i + 1) & 0xFF;
+                                            int r = buf.get(i + 2) & 0xFF;
+                                            int a = buf.get(i + 3) & 0xFF;
+                                            int argb = (a << 24) | (r << 16) | (gcol << 8) | b;
+                                            img.setRGB(x, y, argb);
+                                        }
+                                    }
+                                    File out = new File("run/atlas-dump-minecolonies_gui.png");
+                                    ImageIO.write(img, "PNG", out);
+                                }
+                            } else {
+                                // Could not find texture GL id via reflection; skipping fallback bind.
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         // Left side tabs (draw using MineColonies assets and correct sizes).
         // Use exact texture sizes: tab side = 32x26, module icons = 20x20.
         final int tabX = left - 28; // overlap so tab sits over paper edge
         int tabY = top + 24;
+        // Ensure runtime (non-atlas) consolidated tab texture is loaded (bypass atlas/mipmaps)
+        ensureRuntimeTabTexturesLoaded();
 
-        g.blit(TAB_SIDE_1, tabX, tabY, 0, 0, 32, 26, 32, 26);
-        g.blit(MODULE_INVENTORY, tabX + 6, tabY + 3, 0, 0, 20, 20, 20, 20);
+        // Debug: allow skipping or drawing boxes to isolate artifact
+        if (DEBUG_RENDER_MODE == 1) {
+            // skip drawing tabs entirely
+        } else if (DEBUG_RENDER_MODE == 2) {
+            // draw solid boxes where tabs would be (semi-transparent red)
+            g.fill(tabX, tabY, tabX + 32, tabY + 26, 0x80FF0000);
+            g.fill(tabX + 0, tabY + 28, tabX + 32, tabY + 28 + 26, 0x8080FF00);
+            g.fill(tabX + 0, tabY + 56, tabX + 32, tabY + 56 + 26, 0x800000FF);
+            g.fill(tabX + 0, tabY + 84, tabX + 32, tabY + 84 + 26, 0x80FFFF00);
+        } else {
+            // UV inset: sample 1px inset from the runtime (non-atlas) texture to avoid any sampling bleed
+            g.blit(TAB_SIDE_1_RUNTIME, tabX + 1, tabY + 1, 1, 1, 30, 24, 32, 26);
+            g.blit(MODULE_INVENTORY, tabX + 7, tabY + 4, 0, 0, 20, 20, 20, 20);
+        }
         tabY += 28;
-        g.blit(TAB_SIDE_2, tabX, tabY, 0, 0, 32, 26, 32, 26);
-        g.blit(MODULE_STOCK, tabX + 6, tabY + 3, 0, 0, 20, 20, 20, 20);
+        if (DEBUG_RENDER_MODE == 2) {
+            // already drew all four boxes above for solid-box mode; advance tabY
+        } else if (DEBUG_RENDER_MODE != 1) {
+            g.blit(TAB_SIDE_2_RUNTIME, tabX + 1, tabY + 1, 1, 1, 30, 24, 32, 26);
+            g.blit(MODULE_STOCK, tabX + 7, tabY + 4, 0, 0, 20, 20, 20, 20);
+        }
+        
         tabY += 28;
-        g.blit(TAB_SIDE_3, tabX, tabY, 0, 0, 32, 26, 32, 26);
-        g.blit(MODULE_SETTINGS, tabX + 6, tabY + 3, 0, 0, 20, 20, 20, 20);
+        if (DEBUG_RENDER_MODE != 1 && DEBUG_RENDER_MODE != 2) {
+            g.blit(TAB_SIDE_3_RUNTIME, tabX + 1, tabY + 1, 1, 1, 30, 24, 32, 26);
+            g.blit(MODULE_SETTINGS, tabX + 7, tabY + 4, 0, 0, 20, 20, 20, 20);
+        }
+        
         tabY += 28;
-        g.blit(TAB_SIDE_4, tabX, tabY, 0, 0, 32, 26, 32, 26);
-        g.blit(MODULE_INFO, tabX + 6, tabY + 3, 0, 0, 20, 20, 20, 20);
+        if (DEBUG_RENDER_MODE != 1 && DEBUG_RENDER_MODE != 2) {
+            g.blit(TAB_SIDE_4_RUNTIME, tabX + 1, tabY + 1, 1, 1, 30, 24, 32, 26);
+            g.blit(MODULE_INFO, tabX + 7, tabY + 4, 0, 0, 20, 20, 20, 20);
+        }
+        
 
         // Header sketch (layouthutpageactionsminwoinv.xml)
         g.blit(SKETCH_LEFT, left + 24, top + 12, 0, 0, SKETCH_L_W, SKETCH_L_H, SKETCH_L_W, SKETCH_L_H);
@@ -358,18 +467,9 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         // workerassigned label (layouthutpageactions.xml) pos="13 32" size="164 11"
         drawCenteredInBoxNoShadowColor(g, LBL_WORKER_ASSIGNED, left + 13, top + 32, 164, 0xFF000000);
 
-        // ===== Labels dos botões (porque TexturedButton é só textura; o XML tinha label no botão) =====
-        // hire pos="30 74" size="129 17"
-        drawCenteredInRectNoShadow(g, LBL_MANAGE, left + 30, top + 74, MEDIUM_LARGE_W, MEDIUM_LARGE_H, 0xFF000000);
-
-        // recall pos="30 92" size="129 17"
-        drawCenteredInRectNoShadow(g, LBL_RECALL, left + 30, top + 92, MEDIUM_LARGE_W, MEDIUM_LARGE_H, 0xFF000000);
-
-        // build pos="30 110" size="129 17"
-        drawCenteredInRectNoShadow(g, LBL_BUILD_REPAIR, left + 30, top + 110, MEDIUM_LARGE_W, MEDIUM_LARGE_H, 0xFF000000);
-
-        // inventory pos="52 214" size="86 17"
-        drawCenteredInRectNoShadow(g, LBL_INVENTORY, left + 52, top + 214, MEDIUM_W, MEDIUM_H, 0xFF000000);
+        // Note: button labels are intentionally omitted here to avoid drawing
+        // text beneath the textured widgets. Text for these actions is
+        // rendered by the widgets themselves (or will be added later).
 
         // prioValue pos="30 135" size="95 15"
         // MVP: desenhar o valor local de Delivery Priority. Não há sincronização ainda (PÓS-MVP).
@@ -378,11 +478,7 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
             g.drawString(this.font, prioText, left + 30, top + 135, 0xFF000000, false);
         }
 
-        // Sawmill enabled indicator
-        if (this.font != null) {
-            final Component sawText = Component.literal("Sawmill: " + (this.menu.isSawmillEnabled() ? "ON" : "OFF"));
-            g.drawString(this.font, sawText, left + 30, top + 172, 0xFF000000, false);
-        }
+        // Sawmill enabled indicator removed to avoid overlap artifacts behind buttons
 
         // deliveryPrioDown/up labels removed — buttons render their own text now
 
@@ -408,6 +504,85 @@ public class ArchitectTableScreen extends AbstractContainerScreen<ArchitectTable
         final int listH = 163;
         drawBoxOutline(g, listX, listY, listW, listH, 0xFF000000);
         */
+    }
+
+    // Load the `_filled.png` tab images as runtime textures (bypass atlas) and register them
+    private void ensureRuntimeTabTexturesLoaded() {
+        if (runtimeTabTexturesLoaded) return;
+        runtimeTabTexturesLoaded = true;
+        try {
+            if (this.minecraft == null || this.minecraft.getResourceManager() == null || this.minecraft.getTextureManager() == null) return;
+
+            loadAndRegister(TAB_SIDE_1, TAB_SIDE_1_RUNTIME);
+            loadAndRegister(TAB_SIDE_2, TAB_SIDE_2_RUNTIME);
+            loadAndRegister(TAB_SIDE_3, TAB_SIDE_3_RUNTIME);
+            loadAndRegister(TAB_SIDE_4, TAB_SIDE_4_RUNTIME);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadAndRegister(final ResourceLocation src, final ResourceLocation target) {
+        try {
+            java.util.Optional<Resource> opt = this.minecraft.getResourceManager().getResource(src);
+            if (opt.isEmpty()) return;
+            Resource res = opt.get();
+            try (InputStream is = res.open()) {
+                NativeImage img = NativeImage.read(is);
+                if (img != null) {
+                    DynamicTexture dt = new DynamicTexture(img);
+                    try {
+                        // Prefer the explicit API when available
+                        dt.setFilter(false, false);
+                    } catch (Throwable ignored) {}
+                    this.minecraft.getTextureManager().register(target, dt);
+                    // Try to force sampling/filtering flags on the registered texture (best-effort)
+                    try {
+                        Object tex = this.minecraft.getTextureManager().getTexture(target);
+                        if (tex != null) {
+                            // Try common API methods first
+                            try {
+                                java.lang.reflect.Method m = tex.getClass().getMethod("setFilter", boolean.class, boolean.class);
+                                m.setAccessible(true);
+                                m.invoke(tex, false, false);
+                            } catch (Throwable ignored) {}
+                            try {
+                                java.lang.reflect.Method m2 = tex.getClass().getMethod("setBlurMipmap", boolean.class, boolean.class);
+                                m2.setAccessible(true);
+                                m2.invoke(tex, false, false);
+                            } catch (Throwable ignored) {}
+                            try {
+                                java.lang.reflect.Method m3 = tex.getClass().getMethod("setClamp", boolean.class);
+                                m3.setAccessible(true);
+                                m3.invoke(tex, true);
+                            } catch (Throwable ignored) {}
+
+                            // Fallback: try to find integer GL id field and set gl params directly
+                            try {
+                                int texId = -1;
+                                for (java.lang.reflect.Field f : tex.getClass().getDeclaredFields()) {
+                                    if (f.getType() == int.class) {
+                                        f.setAccessible(true);
+                                        int v = f.getInt(tex);
+                                        if (v > 0) { texId = v; break; }
+                                    }
+                                }
+                                if (texId > 0) {
+                                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+                                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+                                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+                                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+                                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+                                }
+                            } catch (Throwable ignored) {}
+                        }
+                    } catch (Throwable ignored) {}
+                }
+            }
+        } catch (Exception e) {
+            // best-effort: log and continue
+            e.printStackTrace();
+        }
     }
 
     // Mata labels vanilla (title + inventory name)

@@ -66,7 +66,22 @@ public class TexturedButton extends AbstractButton
                 final int tw = font.width(msg);
                 final int tx = this.getX() + (this.width - tw) / 2;
                 final int ty = this.getY() + (this.height - 8) / 2;
-                g.drawString(font, msg, tx, ty, 0xFF000000, false);
+                // Draw scaled down (85%) to avoid overlapping artifacts while keeping layout.
+                try {
+                    final float scale = 0.85f;
+                    final var pose = g.pose();
+                    pose.pushPose();
+                    pose.scale(scale, scale, 1.0f);
+                    // Compute centered position accounting for scale to ensure correct centering
+                    final int twScaled = Math.round(tw * scale);
+                    final int sx = Math.round((this.getX() + (this.width - twScaled) / 2f) / scale);
+                    final int sy = Math.round((this.getY() + (this.height - 8) / 2f) / scale);
+                    g.drawString(font, msg, sx, sy, 0xFF000000, false);
+                    pose.popPose();
+                } catch (final Throwable t2) {
+                    // Fallback: draw normally if pose/scale unavailable
+                    g.drawString(font, msg, tx, ty, 0xFF000000, false);
+                }
             }
         } catch (final Throwable t) {
             // não bloquear a UI se algo falhar com a fonte (compatibilidade)

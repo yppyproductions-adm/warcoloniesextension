@@ -27,5 +27,16 @@ public class WarColoniesExtensionClient {
         // Some client setup code
         WarColoniesExtension.LOGGER.info("HELLO FROM CLIENT SETUP");
         WarColoniesExtension.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        // Register atlas dump handler to inspect texture stitch atlases at runtime
+        try {
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(new com.fenixlunar.warcolonies.client.AtlasDumpHandler());
+        } catch (Exception e) {
+            WarColoniesExtension.LOGGER.warn("Failed to register AtlasDumpHandler: {}", e.toString());
+        }
+        try {
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(new com.fenixlunar.warcolonies.client.ClientAtlasDumper());
+        } catch (Exception e) {
+            WarColoniesExtension.LOGGER.warn("Failed to register ClientAtlasDumper: {}", e.toString());
+        }
     }
 }
